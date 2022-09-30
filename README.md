@@ -149,9 +149,9 @@ sudo ./install
 ####  configure AWS Client 
 ```bash
 aws configure
-AWS Access Key ID [None]: AKIA5T5A3YE2OAGFX65X
-AWS Secret Access Key [None]: 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
-Default region name [None]: ap-northeast-3
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
+Default region name [None]: 
 Default output format [None]: json
 
 ```
