@@ -27,16 +27,11 @@ public class PolicyHandler{
     public void wheneverOrderCancelled_CancelPay(@Payload OrderCancelled orderCancelled){
 
         OrderCancelled event = orderCancelled;
-        System.out.println("\n\n##### listener CancelPay : " + orderCancelled + "\n\n");
-
-
-        
+        System.out.println("\n\n##### listener CancelPay : " + orderCancelled + "\n\n");     
 
         // Sample Logic //
         Payment.cancelPay(event);
-        
-
-        
+       
 
     }
 
@@ -44,10 +39,7 @@ public class PolicyHandler{
     public void wheneverOrderPlaced_Pay(@Payload OrderPlaced orderPlaced){
 
         OrderPlaced event = orderPlaced;
-        System.out.println("\n\n##### listener Pay : " + orderPlaced + "\n\n");
-
-
-        
+        System.out.println("\n\n##### listener Pay : " + orderPlaced + "\n\n");        
 
         // Sample Logic //
         Payment.pay(event);

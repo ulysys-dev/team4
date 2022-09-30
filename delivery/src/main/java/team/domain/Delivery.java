@@ -59,6 +59,7 @@ public class Delivery  {
     public static void notifyOrder(FlowerWrapped flowerWrapped, OrderService orderService){
 
         /** Example 1:  new item         */
+        
         Delivery delivery = new Delivery();
         delivery.setOrderId(Long.valueOf(flowerWrapped.getOrderId()));
 

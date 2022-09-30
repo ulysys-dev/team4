@@ -1,3 +1,9 @@
+## kafka consumer 접속
+
+docker-compose exec -it kafka /bin/bash
+cd /bin
+./kafka-console-consumer --bootstrap-server localhost:9092 --topic team
+
 
 
 ## Service Port
