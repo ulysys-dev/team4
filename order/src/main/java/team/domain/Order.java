@@ -74,16 +74,15 @@ public class Order  {
     @PostPersist
     public void onPostPersist(){
 
-
-        OrderPlaced orderPlaced = new OrderPlaced(this);
-        orderPlaced.publishAfterCommit();
-
         // Get request from Store
         team.external.Store store =
            OrderApplication.applicationContext.getBean(team.external.StoreService.class)
            .getStore(getFlowerId());
 
         if (store.getFlowerCnt() < getQty()) throw new RuntimeException("Out of stock!");
+
+        OrderPlaced orderPlaced = new OrderPlaced(this);
+        orderPlaced.publishAfterCommit();
 
     }
 

@@ -42,8 +42,8 @@ public class Delivery  {
     public void onPostPersist(){
 
 
-        DeliveryStarted deliveryStarted = new DeliveryStarted(this);
-        deliveryStarted.publishAfterCommit();
+        // DeliveryStarted deliveryStarted = new DeliveryStarted(this);
+        // deliveryStarted.publishAfterCommit();
 
         // DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
         // deliveryCompleted.publishAfterCommit();
@@ -72,12 +72,16 @@ public class Delivery  {
         /** Example 1:  new item         */
 
         Delivery delivery = new Delivery();
+
         delivery.setOrderId(Long.valueOf(flowerWrapped.getOrderId()));
 
         Order order = orderService.getOrder(Long.valueOf(flowerWrapped.getOrderId()));  // REST로 address 호출
         delivery.setAddress(order.getAddress());
 
         repository().save(delivery);
+
+        DeliveryStarted deliveryStarted = new DeliveryStarted(delivery);
+        deliveryStarted.publishAfterCommit();
      
         /** Example 2:  finding and process
         
@@ -96,13 +100,17 @@ public class Delivery  {
 
     public static void deliveryCancel(PaymentCanceled paymentCanceled){
 
-        /** Example 1:  new item 
+        /** Example 1:  new item         */
+
         Delivery delivery = new Delivery();
+        delivery.setOrderId(Long.valueOf(paymentCanceled.getOrderId()));
+        delivery.setDeliveryCancelDate(null);
+        
         repository().save(delivery);
 
         DeliveryCanceled deliveryCanceled = new DeliveryCanceled(delivery);
         deliveryCanceled.publishAfterCommit();
-        */
+
 
         /** Example 2:  finding and process         */
         
@@ -116,7 +124,10 @@ public class Delivery  {
 
         //  });
 
-
+        
+        // List<Delivery> deliveryList = deliveryRepository.findByOrderId(orderCancelled.getId());
+        // if ((deliveryList != null) && !deliveryList.isEmpty()){
+        //     deliveryRepository.deleteAll(deliveryList);
         
     }
 

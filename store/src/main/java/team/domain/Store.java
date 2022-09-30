@@ -58,9 +58,8 @@ public class Store  {
     @PostPersist
     public void onPostPersist(){
 
-
-        FlowerSold flowerSold = new FlowerSold(this);
-        flowerSold.publishAfterCommit();
+        //flowerSold = new FlowerSold(this);
+        // FlowerSol flowerSold.publishAfterCommit();
 
     }
 
@@ -74,11 +73,11 @@ public class Store  {
     public void wrap(){
         FlowerWrapped flowerWrapped = new FlowerWrapped(this);
         flowerWrapped.publishAfterCommit();
-        //flowerWrapped.setOrderId(getOrderId());
-
     }
 
     public static void ifOnlineOrder(PaymentCompleted paymentCompleted){
+
+        if (paymentCompleted.getIsOffline()) return;
 
         /** Example 1:  new item */
         Store store = new Store();
@@ -87,14 +86,11 @@ public class Store  {
         store.setFlowerCnt(paymentCompleted.getQty());
         store.setOrderId(paymentCompleted.getOrderId());
         store.setFlowerPrice(paymentCompleted.getPrice());        
-        store.setIsOffline(false);
+        store.setIsOffline(paymentCompleted.getIsOffline());
 
         repository().save(store);
 
-        FlowerWrapped flowerWrapped = new FlowerWrapped(store);
-
-        store.setOrderId(paymentCompleted.getOrderId());
-        
+        FlowerWrapped flowerWrapped = new FlowerWrapped(store);        
         flowerWrapped.publishAfterCommit();
         
 
@@ -115,6 +111,8 @@ public class Store  {
     }
     public static void ifOfflineOrder(PaymentCompleted paymentCompleted){
 
+        if (!paymentCompleted.getIsOffline()) return;
+
         /** Example 1:  new item */
         Store store = new Store();       
 
@@ -123,7 +121,7 @@ public class Store  {
         store.setFlowerCnt(paymentCompleted.getQty());
         store.setOrderId(paymentCompleted.getOrderId());
         store.setFlowerPrice(paymentCompleted.getPrice());
-        store.setIsOffline(true);
+        store.setIsOffline(paymentCompleted.getIsOffline());
 
         repository().save(store);
 

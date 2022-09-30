@@ -9,5 +9,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface StoreRepository extends PagingAndSortingRepository<Store, Long>{
 
 
-    Optional<Store> findByFlowerId(Long oflowerId); 
+    Optional<Store> findByFlowerId(Long flowerId); 
 }

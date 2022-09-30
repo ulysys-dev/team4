@@ -30,11 +30,10 @@ public class PolicyHandler{
         System.out.println("\n\n##### listener IfOnlineOrder : " + paymentCompleted + "\n\n");
 
 
-        
-
-        // Sample Logic //
-        Store.ifOnlineOrder(event);
-        
+        if(!event.getIsOffline()){
+            // Sample Logic //
+            Store.ifOnlineOrder(event);
+        }       
 
         
 
@@ -47,11 +46,10 @@ public class PolicyHandler{
         System.out.println("\n\n##### listener IfOfflineOrder : " + paymentCompleted + "\n\n");
 
 
-        
-
-        // Sample Logic //
-        Store.ifOfflineOrder(event);
-        
+        if(event.getIsOffline()){
+            // Sample Logic //
+            Store.ifOfflineOrder(event);
+        }         
 
         
 

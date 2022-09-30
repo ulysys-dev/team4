@@ -141,11 +141,11 @@ public class Notify  {
     }
     public static void notifyMessage(OrderPlaced orderPlaced){
 
-        /** Example 1:  new item 
+        /** Example 1:  new item */
         Notify notify = new Notify();
         repository().save(notify);
 
-        */
+        
 
         /** Example 2:  finding and process
         

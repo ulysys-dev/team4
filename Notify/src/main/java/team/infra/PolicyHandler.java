@@ -33,12 +33,8 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        //Notify.notifyMessage(event);
+        Notify.notifyMessage(event);
         
-        Notify notify = new Notify();
-        notify.setId(paymentCompleted.getFlowerId());
-        notify.setMessage("payment completed");
-        notifyRepository.save(notify);
 
     }
     @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='DeliveryCompleted'")
@@ -51,12 +47,8 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        //Notify.notifyMessage(event);
+        Notify.notifyMessage(event);
         
-        Notify notify = new Notify();
-        notify.setId(deliveryCompleted.getOrderId());
-        notify.setMessage("delivery completed");
-        notifyRepository.save(notify);
 
     }
     @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='DeliveryStarted'")
@@ -69,12 +61,8 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        //Notify.notifyMessage(event);
+        Notify.notifyMessage(event);
         
-        Notify notify = new Notify();
-        notify.setId(deliveryStarted.getOrderId());
-        notify.setMessage("delivery started");
-        notifyRepository.save(notify);
 
     }
     @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='PaymentCanceled'")
@@ -87,12 +75,8 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        //Notify.notifyMessage(event);
+        Notify.notifyMessage(event);
         
-        Notify notify = new Notify();
-        notify.setId(paymentCanceled.getFlowerId());
-        notify.setMessage("payment cancelled");
-        notifyRepository.save(notify);
 
     }
     @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='OrderPlaced'")
@@ -103,12 +87,8 @@ public class PolicyHandler{
        
 
         // Sample Logic //
-        //Notify.notifyMessage(event);
+        Notify.notifyMessage(event);
         
-        Notify notify = new Notify();
-        notify.setId(orderPlaced.getFlowerId());
-        notify.setMessage("order placed");
-        notifyRepository.save(notify);
 
     }
     @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='DeliveryCanceled'")
@@ -121,12 +101,8 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        //Notify.notifyMessage(event);
+        Notify.notifyMessage(event);
         
-        Notify notify = new Notify();
-        notify.setId(deliveryCanceled.getOrderId());
-        notify.setMessage("delivery cancelled");
-        notifyRepository.save(notify);
 
     }
 

@@ -82,7 +82,11 @@ http :8084/payments
 
 
 ## Store
-http PUT :8083/stores/1/wrap orderId=1
+http :8083/stores flowerId=1 flowerCnt=2 flowerPrice=500
+http :8083/stores flowerId=2 flowerCnt=5 flowerPrice=1500
+http :8083/stores flowerId=3 flowerCnt=8 flowerPrice=4000
+http :8083/stores flowerId=4 flowerCnt=12 flowerPrice=6000
+http :8083/stores flowerId=5 flowerCnt=1 flowerPrice=1000
 
 ```
 
@@ -103,5 +107,8 @@ eksctl create cluster --name team4 --version 1.21 --spot --managed --nodegroup-n
 ```
 git pull
 
-git 
-``
+git merge origin/template
+```
+
+## MariaDB
+[mariaDB 설정](https://github.com/msa-school/ddd-petstore-level6-layered-spring-jpa/blob/main/README.md)

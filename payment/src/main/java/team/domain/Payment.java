@@ -5,6 +5,8 @@ import team.domain.PaymentCanceled;
 import team.PaymentApplication;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.Data;
 import java.util.Date;
 
@@ -40,12 +42,13 @@ public class Payment  {
     @PostPersist
     public void onPostPersist(){
 
+        /* 
         PaymentCompleted paymentCompleted = new PaymentCompleted(this);
         paymentCompleted.publishAfterCommit();
 
         PaymentCanceled paymentCanceled = new PaymentCanceled(this);
         paymentCanceled.publishAfterCommit();
-
+        */
     }
 
     public static PaymentRepository repository(){
@@ -76,34 +79,53 @@ public class Payment  {
             PaymentCanceled paymentCanceled = new PaymentCanceled(payment);
             paymentCanceled.publishAfterCommit();
 
-         });
-        */
-      
-        PaymentCanceled paymentCanceled = new PaymentCanceled();
+        });
         
-        paymentCanceled = paymentCanceled.findByOrderId(orderCancelled.getId());
-        // paymentCanceled.setFlowerId(orderCancelled.getFlowerId());
-        // paymentCanceled.setPrice(orderCancelled.getPrice());
-        // paymentCanceled.setPayDate(orderCancelled.getOrderDate());
-        // paymentCanceled.setCardNo(null);
-        // paymentCanceled.setOrderId(orderCancelled.getId());
-        // paymentCanceled.setQty(orderCancelled.getQty());
-        paymentCanceled.setStatus("CANCELED");
+                // Payment = Payment.findByOrderId(orderCancelled.getId());
+        
+               
+        
+                // PaymentCanceled paymentCanceled = new PaymentCanceled();        
+                // paymentCanceled = paymentCanceled.findByOrderId(orderCancelled.getId());
+                // paymentCanceled.setFlowerId(orderCancelled.getFlowerId());
+                // paymentCanceled.setPrice(orderCancelled.getPrice());
+                // paymentCanceled.setPayDate(orderCancelled.getOrderDate());
+                // paymentCanceled.setCardNo(null);
+                // paymentCanceled.setOrderId(orderCancelled.getId());
+                // paymentCanceled.setQty(orderCancelled.getQty());
+                // paymentCanceled.setStatus("CANCELED");
+        
+                // repository().save(paymentCanceled, paymentCanceled.getId());
+        */
+            
+     
+        // Payment payment = repository().findByOrderId(orderCancelled.getId());
+        // payment.setStatus("CANCELED");
+        
+        // PaymentCanceled paymentCanceled = new PaymentCanceled(payment);
+        // paymentCanceled.publishAfterCommit();
 
-        // repository().save(paymentCanceled, paymentCanceled.getId());
+
+        repository().findById(orderCancelled.getId()).ifPresent(payment->{
+            
+            payment.setStatus("CANCELED");
+            repository().save(payment);
+
+            PaymentCanceled paymentCanceled = new PaymentCanceled(payment);
+            paymentCanceled.publishAfterCommit();
+
+        });
     
-    }
-    
+    }       
+
     public static void pay(OrderPlaced orderPlaced){
 
-        /** Example 1:  new item 
+        /** Example 1:  new item */
         Payment payment = new Payment();
-        repository().save(payment);
-
-        PaymentCompleted paymentCompleted = new PaymentCompleted(payment);
-        paymentCompleted.publishAfterCommit();
-        */
-        Payment payment = new Payment();
+        //repository().save(payment);
+               
+        
+        //Payment payment = new Payment();
         payment.setFlowerId(orderPlaced.getFlowerId());
         payment.setPrice(orderPlaced.getPrice());
         payment.setPayDate(orderPlaced.getOrderDate());
@@ -111,9 +133,12 @@ public class Payment  {
         payment.setOrderId(orderPlaced.getId());
         payment.setQty(orderPlaced.getQty());
         payment.setStatus("PAYED");
+        payment.setIsOffline(orderPlaced.getIsOffline());
         
         repository().save(payment);
 
+        PaymentCompleted paymentCompleted = new PaymentCompleted(payment);
+        paymentCompleted.publishAfterCommit();
 
         /** Example 2:  finding and process
         

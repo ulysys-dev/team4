@@ -19,8 +19,8 @@ public class PaymentCanceled extends AbstractEvent {
     private String status;
     private Boolean isOffline;
 
-    public PaymentCanceled(Payment aggregate){
-        super(aggregate);
+    public PaymentCanceled(Payment payment){
+        super(payment);
     }
     public PaymentCanceled(){
         super();
