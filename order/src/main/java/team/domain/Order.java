@@ -1,6 +1,5 @@
 package team.domain;
 
-import team.domain.OrderCancelled;
 import team.domain.OrderPlaced;
 import team.OrderApplication;
 import javax.persistence.*;
@@ -76,11 +75,6 @@ public class Order  {
     public void onPostPersist(){
 
 
-        OrderCancelled orderCancelled = new OrderCancelled(this);
-        orderCancelled.publishAfterCommit();
-
-
-
         OrderPlaced orderPlaced = new OrderPlaced(this);
         orderPlaced.publishAfterCommit();
 
@@ -100,6 +94,11 @@ public class Order  {
 
 
 
+    public void cancelOrder(){
+        OrderCancelled orderCancelled = new OrderCancelled(this);
+        orderCancelled.publishAfterCommit();
+
+    }
 
     public static void updateStatus(FlowerSold flowerSold){
 

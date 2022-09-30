@@ -15,7 +15,7 @@ spring:
         - id: order
           uri: http://localhost:8082
           predicates:
-            - Path=/orders/**, /productLists/**, /orderHistories/**
+            - Path=/orders/**, /orderHistories/**
         - id: store
           uri: http://localhost:8083
           predicates:
@@ -24,14 +24,10 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path=/payments/**, 
-        - id: dashboard
+        - id: Notify
           uri: http://localhost:8085
           predicates:
-            - Path=, /dashboards/**
-        - id: Notify
-          uri: http://localhost:8086
-          predicates:
-            - Path=/payMgmts/**, 
+            - Path=/notifies/**, 
         - id: frontend
           uri: http://localhost:8080
           predicates:
@@ -62,7 +58,7 @@ spring:
         - id: order
           uri: http://order:8080
           predicates:
-            - Path=/orders/**, /productLists/**, /orderHistories/**
+            - Path=/orders/**, /orderHistories/**
         - id: store
           uri: http://store:8080
           predicates:
@@ -71,14 +67,10 @@ spring:
           uri: http://payment:8080
           predicates:
             - Path=/payments/**, 
-        - id: dashboard
-          uri: http://dashboard:8080
-          predicates:
-            - Path=, /dashboards/**
         - id: Notify
           uri: http://notify:8080
           predicates:
-            - Path=/payMgmts/**, 
+            - Path=/notifies/**, 
         - id: frontend
           uri: http://frontend:8080
           predicates:

@@ -32,6 +32,18 @@ public class Payment  {
     private Long orderId;
     
     private Integer qty;
+    
+    
+    
+    
+    
+    private String status;
+    
+    
+    
+    
+    
+    private Boolean isOffline;
 
     private String status;
 
@@ -99,6 +111,8 @@ public class Payment  {
         Payment payment = new Payment();
         repository().save(payment);
 
+        PaymentCompleted paymentCompleted = new PaymentCompleted(payment);
+        paymentCompleted.publishAfterCommit();
         */
         Payment payment = new Payment();
         payment.setFlowerId(orderPlaced.getFlowerId());
@@ -119,6 +133,8 @@ public class Payment  {
             payment // do something
             repository().save(payment);
 
+            PaymentCompleted paymentCompleted = new PaymentCompleted(payment);
+            paymentCompleted.publishAfterCommit();
 
          });
         */

@@ -1,35 +1,11 @@
 <template>
     <div>
-        <v-list two-line>
-            <template>
-                <v-list-item v-for="(data, n) in values" :key="n">
-                    <v-list-item-avatar color="grey darken-1">
-                        <v-img :src="data.photo ? data.photo:'https://cdn.vuetifyjs.com/images/cards/cooking.png'"/>
-                    </v-list-item-avatar>
-
-                    <v-list-item-content>
-                        <v-list-item-title style="margin-bottom:10px;">
-                            
-                            
-                            
-                            
-                            
-                        </v-list-item-title>
-
-                        <v-list-item-subtitle style="font-size:25px; font-weight:700;">
-                            [ Id :  {{data.id }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            [ FlowerName :  {{data.flowerName }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            [ PhoneNumber :  {{data.phoneNumber }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            [ Message :  {{data.message }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            [ FlowerCnt :  {{data.flowerCnt }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </v-list-item-subtitle>
-
-                    </v-list-item-content>
-                </v-list-item>
-
-                <v-divider v-if="n !== 6" :key="`divider-${n}`" inset></v-divider>
-            </template>
-        </v-list>
+        <v-data-table
+                :headers="headers"
+                :items="values"
+                :items-per-page="5"
+                class="elevation-1"
+        ></v-data-table>
 
         <v-col style="margin-bottom:40px;">
             <div class="text-center">
@@ -55,7 +31,7 @@
                         </v-fab-transition>
                     </template>
 
-                    <PayMgmt :offline="offline" class="video-card" :isNew="true" :editMode="true" v-model="newValue" @add="append" v-if="tick"/>
+                    <Notify :offline="offline" class="video-card" :isNew="true" :editMode="true" v-model="newValue" @add="append" v-if="tick"/>
                 
                     <v-btn
                             style="postition:absolute; top:2%; right:2%"
@@ -74,12 +50,12 @@
 
 <script>
     const axios = require('axios').default;
-    import PayMgmt from './../PayMgmt.vue';
+    import Notify from './../Notify.vue';
 
     export default {
-        name: 'PayMgmtManager',
+        name: 'NotifyManager',
         components: {
-            PayMgmt,
+            Notify,
         },
         props: {
             offline: Boolean,
@@ -88,6 +64,15 @@
         },
         data: () => ({
             values: [],
+            headers: 
+                [
+                    { text: "id", value: "id" },
+                    { text: "flowerName", value: "flowerName" },
+                    { text: "phoneNumber", value: "phoneNumber" },
+                    { text: "message", value: "message" },
+                    { text: "flowerCnt", value: "flowerCnt" },
+                ],
+            notify : [],
             newValue: {},
             tick : true,
             openDialog : false,
@@ -96,12 +81,12 @@
             if(this.offline){
                 if(!this.values) this.values = [];
                 return;
-            } 
+            }
 
-            var temp = await axios.get(axios.fixUrl('/paymgmts'))
-            temp.data._embedded.paymgmts.map(obj => obj.id=obj._links.self.href.split("/")[obj._links.self.href.split("/").length - 1])
-            this.values = temp.data._embedded.paymgmts;
-            
+            var temp = await axios.get(axios.fixUrl('/notifies'))
+            temp.data._embedded.notifies.map(obj => obj.id=obj._links.self.href.split("/")[obj._links.self.href.split("/").length - 1])
+            this.values = temp.data._embedded.notifies;
+
             this.newValue = {
                 'flowerName': '',
                 'phoneNumber': '',
@@ -123,18 +108,8 @@
                 this.$nextTick(function(){
                     this.tick=true
                 })
-            }
-        },
-    };
-</script>
-
-
-<style>
-    .video-card {
-        width:300px; 
-        margin-left:4.5%; 
-        margin-top:50px; 
-        margin-bottom:50px;
+            },
+        }
     }
-</style>
+</script>
 

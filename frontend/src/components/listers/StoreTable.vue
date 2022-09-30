@@ -71,6 +71,7 @@
                     { text: "flowerCnt", value: "flowerCnt" },
                     { text: "orderId", value: "orderId" },
                     { text: "flowerPrice", value: "flowerPrice" },
+                    { text: "isOffline", value: "isOffline" },
                 ],
             store : [],
             newValue: {},
@@ -92,6 +93,7 @@
                 'flowerCnt': 0,
                 'orderId': 0,
                 'flowerPrice': 0,
+                'isOffline': false,
             }
         },
         methods: {

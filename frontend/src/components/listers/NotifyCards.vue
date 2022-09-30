@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 style = "margin-left:4.5%; margin-top:-10px;">PayMgmt</h1>
+        <h1 style = "margin-left:4.5%; margin-top:-10px;">Notify</h1>
         <v-col style="margin-bottom:40px;">
             <div class="text-center">
                 <v-dialog
@@ -10,7 +10,7 @@
                         hide-overlay
                         transition="dialog-bottom-transition"
                 >
-                    <PayMgmt :offline="offline" class="video-card" :isNew="true" :editMode="true" v-model="newValue" 
+                    <Notify :offline="offline" class="video-card" :isNew="true" :editMode="true" v-model="newValue" 
                             @add="append" v-if="tick"/>
 
                     <v-btn
@@ -33,7 +33,7 @@
             </div>
         </v-col>
         <v-row>
-            <PayMgmt :offline="offline" class="video-card" v-for="(value, index) in values" v-model="values[index]" v-bind:key="index" @delete="remove"/>
+            <Notify :offline="offline" class="video-card" v-for="(value, index) in values" v-model="values[index]" v-bind:key="index" @delete="remove"/>
         </v-row>
     </div>
 </template>
@@ -41,12 +41,12 @@
 <script>
 
     const axios = require('axios').default;
-    import PayMgmt from './../PayMgmt.vue';
+    import Notify from './../Notify.vue';
 
     export default {
-        name: 'PayMgmtManager',
+        name: 'NotifyManager',
         components: {
-            PayMgmt,
+            Notify,
         },
         props: {
             offline: Boolean
@@ -64,8 +64,8 @@
                 return;
             } 
 
-            var temp = await axios.get(axios.fixUrl('/payMgmts'))
-            me.values = temp.data._embedded.payMgmts;
+            var temp = await axios.get(axios.fixUrl('/notifies'))
+            me.values = temp.data._embedded.notifies;
             
             me.newValue = {
                 'flowerName': '',

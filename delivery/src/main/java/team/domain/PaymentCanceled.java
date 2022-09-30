@@ -15,9 +15,8 @@ public class PaymentCanceled extends AbstractEvent {
     private Long orderId;
     private Integer qty;
     private Double price;
-    public boolean isMe() {
-        return false;
-    }
+    private String status;
+    private Boolean isOffline;
 }
 
 

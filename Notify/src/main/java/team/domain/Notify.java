@@ -7,10 +7,10 @@ import lombok.Data;
 import java.util.Date;
 
 @Entity
-@Table(name="PayMgmt_table")
+@Table(name="Notify_table")
 @Data
 
-public class PayMgmt  {
+public class Notify  {
 
     
     @Id
@@ -47,9 +47,9 @@ public class PayMgmt  {
     private Integer flowerCnt;
 
 
-    public static PayMgmtRepository repository(){
-        PayMgmtRepository payMgmtRepository = NotifyApplication.applicationContext.getBean(PayMgmtRepository.class);
-        return payMgmtRepository;
+    public static NotifyRepository repository(){
+        NotifyRepository notifyRepository = NotifyApplication.applicationContext.getBean(NotifyRepository.class);
+        return notifyRepository;
     }
 
 
@@ -58,17 +58,17 @@ public class PayMgmt  {
     public static void notifyMessage(PaymentCompleted paymentCompleted){
 
         /** Example 1:  new item 
-        PayMgmt payMgmt = new PayMgmt();
-        repository().save(payMgmt);
+        Notify notify = new Notify();
+        repository().save(notify);
 
         */
 
         /** Example 2:  finding and process
         
-        repository().findById(paymentCompleted.get???()).ifPresent(payMgmt->{
+        repository().findById(paymentCompleted.get???()).ifPresent(notify->{
             
-            payMgmt // do something
-            repository().save(payMgmt);
+            notify // do something
+            repository().save(notify);
 
 
          });
@@ -79,17 +79,17 @@ public class PayMgmt  {
     public static void notifyMessage(DeliveryCompleted deliveryCompleted){
 
         /** Example 1:  new item 
-        PayMgmt payMgmt = new PayMgmt();
-        repository().save(payMgmt);
+        Notify notify = new Notify();
+        repository().save(notify);
 
         */
 
         /** Example 2:  finding and process
         
-        repository().findById(deliveryCompleted.get???()).ifPresent(payMgmt->{
+        repository().findById(deliveryCompleted.get???()).ifPresent(notify->{
             
-            payMgmt // do something
-            repository().save(payMgmt);
+            notify // do something
+            repository().save(notify);
 
 
          });
@@ -100,17 +100,17 @@ public class PayMgmt  {
     public static void notifyMessage(DeliveryStarted deliveryStarted){
 
         /** Example 1:  new item 
-        PayMgmt payMgmt = new PayMgmt();
-        repository().save(payMgmt);
+        Notify notify = new Notify();
+        repository().save(notify);
 
         */
 
         /** Example 2:  finding and process
         
-        repository().findById(deliveryStarted.get???()).ifPresent(payMgmt->{
+        repository().findById(deliveryStarted.get???()).ifPresent(notify->{
             
-            payMgmt // do something
-            repository().save(payMgmt);
+            notify // do something
+            repository().save(notify);
 
 
          });
@@ -121,17 +121,17 @@ public class PayMgmt  {
     public static void notifyMessage(PaymentCanceled paymentCanceled){
 
         /** Example 1:  new item 
-        PayMgmt payMgmt = new PayMgmt();
-        repository().save(payMgmt);
+        Notify notify = new Notify();
+        repository().save(notify);
 
         */
 
         /** Example 2:  finding and process
         
-        repository().findById(paymentCanceled.get???()).ifPresent(payMgmt->{
+        repository().findById(paymentCanceled.get???()).ifPresent(notify->{
             
-            payMgmt // do something
-            repository().save(payMgmt);
+            notify // do something
+            repository().save(notify);
 
 
          });
@@ -142,17 +142,17 @@ public class PayMgmt  {
     public static void notifyMessage(OrderPlaced orderPlaced){
 
         /** Example 1:  new item 
-        PayMgmt payMgmt = new PayMgmt();
-        repository().save(payMgmt);
+        Notify notify = new Notify();
+        repository().save(notify);
 
         */
 
         /** Example 2:  finding and process
         
-        repository().findById(orderPlaced.get???()).ifPresent(payMgmt->{
+        repository().findById(orderPlaced.get???()).ifPresent(notify->{
             
-            payMgmt // do something
-            repository().save(payMgmt);
+            notify // do something
+            repository().save(notify);
 
 
          });
@@ -163,17 +163,17 @@ public class PayMgmt  {
     public static void notifyMessage(DeliveryCanceled deliveryCanceled){
 
         /** Example 1:  new item 
-        PayMgmt payMgmt = new PayMgmt();
-        repository().save(payMgmt);
+        Notify notify = new Notify();
+        repository().save(notify);
 
         */
 
         /** Example 2:  finding and process
         
-        repository().findById(deliveryCanceled.get???()).ifPresent(payMgmt->{
+        repository().findById(deliveryCanceled.get???()).ifPresent(notify->{
             
-            payMgmt // do something
-            repository().save(payMgmt);
+            notify // do something
+            repository().save(notify);
 
 
          });

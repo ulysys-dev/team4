@@ -72,6 +72,7 @@
                 'flowerCnt': 0,
                 'orderId': 0,
                 'flowerPrice': 0,
+                'isOffline': false,
             }
         },
         methods:{

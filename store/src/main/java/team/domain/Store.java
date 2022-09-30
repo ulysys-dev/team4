@@ -48,6 +48,12 @@ public class Store  {
     
     
     private Double flowerPrice;
+    
+    
+    
+    
+    
+    private Boolean isOffline;
 
     private Boolean isOffline;
 

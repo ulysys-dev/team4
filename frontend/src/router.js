@@ -11,8 +11,6 @@ import DeliveryDetail from "./components/listers/DeliveryDetail"
 import OrderManager from "./components/listers/OrderCards"
 import OrderDetail from "./components/listers/OrderDetail"
 
-import ProductListView from "./components/ProductListView"
-import ProductListViewDetail from "./components/ProductListViewDetail"
 import OrderHistoryView from "./components/OrderHistoryView"
 import OrderHistoryViewDetail from "./components/OrderHistoryViewDetail"
 import StoreManager from "./components/listers/StoreCards"
@@ -21,11 +19,8 @@ import StoreDetail from "./components/listers/StoreDetail"
 import PaymentManager from "./components/listers/PaymentCards"
 import PaymentDetail from "./components/listers/PaymentDetail"
 
-
-import DashboardView from "./components/DashboardView"
-import DashboardViewDetail from "./components/DashboardViewDetail"
-import PayMgmtManager from "./components/listers/PayMgmtCards"
-import PayMgmtDetail from "./components/listers/PayMgmtDetail"
+import NotifyManager from "./components/listers/NotifyCards"
+import NotifyDetail from "./components/listers/NotifyDetail"
 
 
 export default new Router({
@@ -54,16 +49,6 @@ export default new Router({
                 component: OrderDetail
             },
 
-            {
-                path: '/productLists',
-                name: 'ProductListView',
-                component: ProductListView
-            },
-            {
-                path: '/productLists/:id',
-                name: 'ProductListViewDetail',
-                component: ProductListViewDetail
-            },
             {
                 path: '/orderHistories',
                 name: 'OrderHistoryView',
@@ -96,26 +81,15 @@ export default new Router({
                 component: PaymentDetail
             },
 
-
             {
-                path: '/dashboards',
-                name: 'DashboardView',
-                component: DashboardView
+                path: '/notifies',
+                name: 'NotifyManager',
+                component: NotifyManager
             },
             {
-                path: '/dashboards/:id',
-                name: 'DashboardViewDetail',
-                component: DashboardViewDetail
-            },
-            {
-                path: '/payMgmts',
-                name: 'PayMgmtManager',
-                component: PayMgmtManager
-            },
-            {
-                path: '/payMgmts/:id',
-                name: 'PayMgmtDetail',
-                component: PayMgmtDetail
+                path: '/notifies/:id',
+                name: 'NotifyDetail',
+                component: NotifyDetail
             },
 
 
