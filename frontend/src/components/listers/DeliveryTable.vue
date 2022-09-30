@@ -72,6 +72,7 @@
                     { text: "deliveryCompleteDate", value: "deliveryCompleteDate" },
                     { text: "deliveryCancelDate", value: "deliveryCancelDate" },
                     { text: "address", value: "address" },
+                    { text: "status", value: "status" },
                 ],
             delivery : [],
             newValue: {},
@@ -90,10 +91,11 @@
 
             this.newValue = {
                 'orderId': 0,
-                'deliveryStartDate': '2022-09-29',
-                'deliveryCompleteDate': '2022-09-29',
-                'deliveryCancelDate': '2022-09-29',
+                'deliveryStartDate': '2022-09-30',
+                'deliveryCompleteDate': '2022-09-30',
+                'deliveryCancelDate': '2022-09-30',
                 'address': '',
+                'status': '',
             }
         },
         methods: {

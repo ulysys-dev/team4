@@ -22,6 +22,7 @@
             <Date label="DeliveryCompleteDate" v-model="value.deliveryCompleteDate" :editMode="editMode"/>
             <Date label="DeliveryCancelDate" v-model="value.deliveryCancelDate" :editMode="editMode"/>
             <String label="Address" v-model="value.address" :editMode="editMode"/>
+            <String label="Status" v-model="value.status" :editMode="editMode"/>
         </v-card-text>
 
         <v-card-actions>

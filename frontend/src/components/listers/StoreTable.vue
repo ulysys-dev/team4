@@ -68,10 +68,7 @@
                 [
                     { text: "id", value: "id" },
                     { text: "flowerId", value: "flowerId" },
-                    { text: "flowerName", value: "flowerName" },
                     { text: "flowerCnt", value: "flowerCnt" },
-                    { text: "packingYn", value: "packingYn" },
-                    { text: "isOffline", value: "isOffline" },
                     { text: "orderId", value: "orderId" },
                     { text: "flowerPrice", value: "flowerPrice" },
                 ],
@@ -92,10 +89,7 @@
 
             this.newValue = {
                 'flowerId': 0,
-                'flowerName': '',
                 'flowerCnt': 0,
-                'packingYn': false,
-                'isOffline': '',
                 'orderId': 0,
                 'flowerPrice': 0,
             }

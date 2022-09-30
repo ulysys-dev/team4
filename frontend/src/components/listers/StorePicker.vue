@@ -18,16 +18,7 @@
                                 FlowerId :  {{item.flowerId }}
                             </v-list-item-subtitle>
                             <v-list-item-subtitle>
-                                FlowerName :  {{item.flowerName }}
-                            </v-list-item-subtitle>
-                            <v-list-item-subtitle>
                                 FlowerCnt :  {{item.flowerCnt }}
-                            </v-list-item-subtitle>
-                            <v-list-item-subtitle>
-                                PackingYn :  {{item.packingYn }}
-                            </v-list-item-subtitle>
-                            <v-list-item-subtitle>
-                                IsOffline :  {{item.isOffline }}
                             </v-list-item-subtitle>
                             <v-list-item-subtitle>
                                 OrderId :  {{item.orderId }}
@@ -86,12 +77,6 @@
                 if(val != undefined) {
                     var arr = this.list[val]._links.self.href.split('/');
                     obj['id'] = arr[4]; 
-                    
-                    
-                    
-                    
-                    
-                    
                     
                     
                     

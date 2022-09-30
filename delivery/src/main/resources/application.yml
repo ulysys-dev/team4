@@ -39,6 +39,9 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
+api:
+  url:
+    order: localhost:8082
 
 server:
   port: 8081
@@ -69,4 +72,7 @@ spring:
           destination: team
           contentType: application/json
 
+api:
+  url:
+    order: order:8080
 
