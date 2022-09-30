@@ -19,45 +19,17 @@ public class Delivery  {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     
-    
-    
-    
-    
     private Long id;
-    
-    
-    
-    
     
     private Long orderId;
     
-    
-    
-    
-    
     private Date deliveryStartDate;
-    
-    
-    
-    
     
     private Date deliveryCompleteDate;
     
-    
-    
-    
-    
     private Date deliveryCancelDate;
-    
-    
-    
-    
-    
+  
     private String address;
-    
-    
-    
-    
     
     private String status;
 
@@ -68,12 +40,8 @@ public class Delivery  {
         DeliveryStarted deliveryStarted = new DeliveryStarted(this);
         deliveryStarted.publishAfterCommit();
 
-
-
         DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
         deliveryCompleted.publishAfterCommit();
-
-
 
         DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
         deliveryCanceled.publishAfterCommit();
@@ -86,15 +54,14 @@ public class Delivery  {
     }
 
 
-
-
     public static void notifyOrder(FlowerWrapped flowerWrapped){
 
-        /** Example 1:  new item 
+        /** Example 1:  new item         */
         Delivery delivery = new Delivery();
+        
         repository().save(delivery);
 
-        */
+
 
         /** Example 2:  finding and process
         
@@ -106,6 +73,8 @@ public class Delivery  {
 
          });
         */
+
+
 
         
     }
