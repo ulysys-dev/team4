@@ -7,6 +7,9 @@ import team.domain.DeliveryCompleted;
 import team.domain.DeliveryCanceled;
 import team.DeliveryApplication;
 import javax.persistence.*;
+
+import org.springframework.beans.BeanUtils;
+
 import java.util.List;
 import lombok.Data;
 import java.util.Date;
@@ -42,13 +45,21 @@ public class Delivery  {
         DeliveryStarted deliveryStarted = new DeliveryStarted(this);
         deliveryStarted.publishAfterCommit();
 
-        DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
-        deliveryCompleted.publishAfterCommit();
+        // DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
+        // deliveryCompleted.publishAfterCommit();
 
-        DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
-        deliveryCanceled.publishAfterCommit();
+        // DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
+        // deliveryCanceled.publishAfterCommit();
 
     }
+
+    @PreRemove      // 주문 취소  
+    public void onPreRemove(){
+        DeliveryCanceled deliveryCanceled = new DeliveryCanceled();
+        BeanUtils.copyProperties(this, deliveryCanceled);
+        deliveryCanceled.publishAfterCommit();        // 카프카에 pub 
+    }
+
 
     public static DeliveryRepository repository(){
         DeliveryRepository deliveryRepository = DeliveryApplication.applicationContext.getBean(DeliveryRepository.class);
@@ -59,7 +70,7 @@ public class Delivery  {
     public static void notifyOrder(FlowerWrapped flowerWrapped, OrderService orderService){
 
         /** Example 1:  new item         */
-        
+
         Delivery delivery = new Delivery();
         delivery.setOrderId(Long.valueOf(flowerWrapped.getOrderId()));
 
