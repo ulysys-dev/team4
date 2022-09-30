@@ -230,3 +230,75 @@ Login Succeeded
 
 
 
+#### install heml
+[heml & kafka](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#ops-utility)
+```bash
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+```
+
+
+#### install kafka without namespace
+```bash
+helm repo update
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-kafka bitnami/kafka
+```
+
+#### check kafka topics without namespace
+```bash
+kubectl run my-kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r0 --command -- sleep infinity
+
+## in container
+kubectl exec --tty -i my-kafka-client -- bash
+
+    PRODUCER:
+        kafka-console-producer.sh \
+            --broker-list my-kafka-0.my-kafka-headless:9092 \
+            --topic team
+
+    CONSUMER:
+        kafka-console-consumer.sh \
+            --bootstrap-server my-kafka:9092 \
+            --topic team \
+            --from-beginning
+
+        kafka-console-consumer.sh \
+        --bootstrap-server my-kafka:9092 \
+        --topic team
+```
+
+##### login dockerHub
+```
+ docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: ulysysdev
+Password: 
+WARNING! Your password will be stored unencrypted in /home/gitpod/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+```
+
+##### build package 
+```
+export MS_ID=payment
+
+cd /workspace/team4/${MS_ID}
+
+mvn package -B -DskipTests
+```
+
+##### build package 
+```
+export MS_ID=payment
+export DOCKER_ID=ulysysdev
+export DOCKER_TAG=v1
+
+cd /workspace/team4/${MS_ID}
+
+docker build -t ${DOCKER_ID}/${MS_ID}:${DOCKER_TAG} .
+docker run ${DOCKER_ID}/${MS_ID}:${DOCKER_TAG}
+```
