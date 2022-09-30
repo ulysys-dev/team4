@@ -132,6 +132,15 @@ git merge origin/template
 export myclusterUserid=team4
 
 eksctl create cluster --name ${myclusterUserid} --version 1.21 --spot --managed --nodegroup-name standard-workers --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 3
+
+
+aws eks update-kubeconfig --name ${myclusterUserid}
+
+ kubectl get nodes
+NAME                                                STATUS   ROLES    AGE   VERSION
+ip-192-168-31-153.ap-northeast-3.compute.internal   Ready    <none>   13m   v1.21.14-eks-ba74326
+ip-192-168-45-158.ap-northeast-3.compute.internal   Ready    <none>   13m   v1.21.14-eks-ba74326
+ip-192-168-76-44.ap-northeast-3.compute.internal    Ready    <none>   13m   v1.21.14-eks-ba74326
 ```
 
 ### ECR
@@ -141,7 +150,8 @@ ECR_URI=936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
 
 export REGION=ap-northeast-3
  $ aws --region $REGION ecr get-login-password 
-eyJwYXlsb2FkIjoiNTY1dFZKbmVtdVlTZmpuMEtIdEhQclo4S29wbjRaWk1xNUNRelllc2t6enoxREtBTDhLc1VoVlVHL1QwcElMemgxMWRsN2E3QkQwbXlSc1M0bllsYjdpUG9KazEyOXEzOXZWa2IyMXhQMUVpeFNGZm1JaFRHdG56OW00UG1YeVc2cExRZEFUK0VSZTJFTGUvTlZDN0N5dDJaTTR2ODVNS1BRZkFvTEVtZDhKbU5LQU1PZDk4MThlMHF6SWtBUEhXazZGdjVDbWpXbTM0c25pS3ZmNFdCMGxxMk5aazdhYkFxRE91a3pib05PWk9WZUVueGZNVDArS1phek9aT3dXbzJKK1Nzcmx1QjhoS0FJVlEvaEgwY3B6bzlFSjdXbjVaWVloS2Y2TzNWbUVXWDFXRGM1VzZHcUQ4VmNhQzY0eHFQWTN0VC9BNjM0ekJZcGdtVzJLczd2OTAzdFBsN2sxU2tWMXArcUVLM2tickZMSmlHQmtESDBzTnZOTEFwSW00Vmw3QUNjeGVPNmhVbU1BNldkaFQ1bXBHU3dYWXdUeDR3Q0xLK1ZibGFBYzVmZ3JTN2VHKzhWUnhGcVF4U2F3RWZZdXYxYkdOeFVTaGp2R2c0cm84VzBCUUdlN2dMQjdRdklHT2lHUkRRRDRvdXhPekoyMWdrWUtZbmdteEFYY1JWcEV4L3VPdFh1TDBKb3Y0NXVPS0dmSjdjZ2xlWXltUHNLNXAxTms4cDdNYm1nUG1YbzFCU2lRMkVPN015MWtSMmNDbS9HVW52QjVXM2VCd1BsMyttU1YrSmNGQW84N2ZMT0x1VGtaNzhpSjFPc284U2owbU5YbWpmMXZCNkNBOE0rZGdNdGlDOWxhNGhidTM3K1lKanRuU0hwZGYxeXY2dTJGa1NVRjlDRWI1RDlxeTIrZUx6L3REa09EMGw3M3NzbXl4ZTA0ZlJzM2V6SDFSdlAwRXJKS0tFYVBROTFqU2kvbENGanIyRDA3Mng2eVF2T3hhS3VaQjFCNEFKTnU2V0kyV0FYMllwaEo2OHFsVk1OWFdTcFVUaU0yWUkxV0VZUGNqRWV6MHQzMkxHb3pheGpLZ1g1TFRFTTNKQ29QTTkxRkV4TXZYcXFFMnNBc3NqeGtaajhyMWJUOWcvMUU0SlQwUVVXcng4Z3ZpOFRaYi90bGwzOExnWFpZVXdnVFZiVzB1dG1Dd1ZoVFB1K2VrcE1nejdXWnBpcTY0eGZoK3dpVXFaWlRNYzRzdkZCeFZLMnE1N2dOUnBjSC9LWnJ5bkRwcnlyelExWW1pckpFMnVXekh0UEYyTzRiMy9QQldxR1kraytSdHFjeGdtRFlreHVlU1JvdUFNOUhhd0QrWERlS3BsT1dSaDYzWjBNRzB5THcwWERka3l1UVliM25LMnhoTWJqUnNBTlFDMWFERzVkdWltd0U9IiwiZGF0YWtleSI6IkFRSUJBSGlKOUdmM0xEa3YrVllQdUJ4emw1SUJxWFBDanJvbWM0NGJYY3RaVFBGcFVBSFExU2RRTXlOWmt2MENSWWg5aE1YdkFBQUFmakI4QmdrcWhraUc5dzBCQndhZ2J6QnRBZ0VBTUdnR0NTcUdTSWIzRFFFSEFUQWVCZ2xnaGtnQlpRTUVBUzR3RVFRTVBwbkFQQ0I1T0lVdDFQSDdBZ0VRZ0R0Zko3a1JBRTNuRHBoY1VWUUVJZGIxQWxONFBCeHJtQTNwSFdERndGR3h3ajBCSjkrblZGUzBQNTh4eWlyK1R0RC9ZbWs4cGFkUVVmTHkwQT09IiwidmVyc2lvbiI6IjIiLCJ0eXBlIjoiREFUQV9LRVkiLCJleHBpcmF0aW9uIjoxNjY0NTY2MzQwfQ==
+eyJwYXlsb2FkIjoiNTY1dFZKbmVtdVlTZmpuMEtIdEhQc
+... 생략 ..
 ```
 
 ## Docker Login to ECR
@@ -158,3 +168,5 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
 ```
+
+
