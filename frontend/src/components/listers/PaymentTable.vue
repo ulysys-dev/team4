@@ -73,6 +73,8 @@
                     { text: "cardNo", value: "cardNo" },
                     { text: "orderId", value: "orderId" },
                     { text: "qty", value: "qty" },
+                    { text: "status", value: "status" },
+                    { text: "isOffline", value: "isOffline" },
                 ],
             payment : [],
             newValue: {},
@@ -92,10 +94,12 @@
             this.newValue = {
                 'flowerId': 0,
                 'price': 0,
-                'payDate': '2022-09-29',
+                'payDate': '2022-09-30',
                 'cardNo': '',
                 'orderId': 0,
                 'qty': 0,
+                'status': '',
+                'isOffline': false,
             }
         },
         methods: {

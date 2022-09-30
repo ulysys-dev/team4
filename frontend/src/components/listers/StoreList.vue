@@ -14,6 +14,7 @@
                             
                             
                             
+                            
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="font-size:25px; font-weight:700;">
@@ -22,6 +23,7 @@
                             [ FlowerCnt :  {{data.flowerCnt }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ OrderId :  {{data.orderId }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ FlowerPrice :  {{data.flowerPrice }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            [ IsOffline :  {{data.isOffline }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </v-list-item-subtitle>
 
                     </v-list-item-content>
@@ -107,6 +109,7 @@
                 'flowerCnt': 0,
                 'orderId': 0,
                 'flowerPrice': 0,
+                'isOffline': false,
             }
         },
         methods: {

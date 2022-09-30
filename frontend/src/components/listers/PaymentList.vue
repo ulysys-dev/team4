@@ -16,6 +16,8 @@
                             
                             
                             
+                            
+                            
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="font-size:25px; font-weight:700;">
@@ -26,6 +28,8 @@
                             [ CardNo :  {{data.cardNo }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ OrderId :  {{data.orderId }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ Qty :  {{data.qty }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            [ Status :  {{data.status }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            [ IsOffline :  {{data.isOffline }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </v-list-item-subtitle>
 
                     </v-list-item-content>
@@ -109,10 +113,12 @@
             this.newValue = {
                 'flowerId': 0,
                 'price': 0,
-                'payDate': '2022-09-29',
+                'payDate': '2022-09-30',
                 'cardNo': '',
                 'orderId': 0,
                 'qty': 0,
+                'status': '',
+                'isOffline': false,
             }
         },
         methods: {

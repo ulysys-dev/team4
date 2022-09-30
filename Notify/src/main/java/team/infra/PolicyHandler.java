@@ -18,7 +18,7 @@ import team.domain.*;
 @Service
 @Transactional
 public class PolicyHandler{
-    @Autowired PayMgmtRepository payMgmtRepository;
+    @Autowired NotifyRepository notifyRepository;
     
     @StreamListener(KafkaProcessor.INPUT)
     public void whatever(@Payload String eventString){}
@@ -33,7 +33,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        PayMgmt.notifyMessage(event);
+        Notify.notifyMessage(event);
         
 
         
@@ -49,7 +49,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        PayMgmt.notifyMessage(event);
+        Notify.notifyMessage(event);
         
 
         
@@ -65,7 +65,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        PayMgmt.notifyMessage(event);
+        Notify.notifyMessage(event);
         
 
         
@@ -81,7 +81,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        PayMgmt.notifyMessage(event);
+        Notify.notifyMessage(event);
         
 
         
@@ -97,7 +97,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        PayMgmt.notifyMessage(event);
+        Notify.notifyMessage(event);
         
 
         
@@ -113,7 +113,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        PayMgmt.notifyMessage(event);
+        Notify.notifyMessage(event);
         
 
         

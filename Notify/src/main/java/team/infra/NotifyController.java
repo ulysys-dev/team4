@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 @RestController
-// @RequestMapping(value="/payMgmts")
+// @RequestMapping(value="/notifies")
 @Transactional
-public class PayMgmtController {
+public class NotifyController {
     @Autowired
-    PayMgmtRepository payMgmtRepository;
+    NotifyRepository notifyRepository;
 
 
 

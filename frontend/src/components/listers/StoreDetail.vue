@@ -17,6 +17,9 @@
             <div>
                 <Number label="FlowerPrice" v-model="item.flowerPrice" :editMode="editMode" @change="change" />
             </div>
+            <div>
+                <Boolean label="IsOffline" v-model="item.isOffline" :editMode="editMode" @change="change" />
+            </div>
         </v-card-text>
 
         <v-card-actions>

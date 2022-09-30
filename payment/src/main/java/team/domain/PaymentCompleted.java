@@ -16,6 +16,8 @@ public class PaymentCompleted extends AbstractEvent {
     private Long orderId;
     private Integer qty;
     private Double price;
+    private String status;
+    private Boolean isOffline;
 
     public PaymentCompleted(Payment aggregate){
         super(aggregate);

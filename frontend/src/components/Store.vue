@@ -21,6 +21,7 @@
             <Number label="FlowerCnt" v-model="value.flowerCnt" :editMode="editMode"/>
             <Number label="OrderId" v-model="value.orderId" :editMode="editMode"/>
             <Number label="FlowerPrice" v-model="value.flowerPrice" :editMode="editMode"/>
+            <Boolean label="IsOffline" v-model="value.isOffline" :editMode="editMode"/>
         </v-card-text>
 
         <v-card-actions>

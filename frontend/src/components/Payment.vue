@@ -23,6 +23,8 @@
             <String label="CardNo" v-model="value.cardNo" :editMode="editMode"/>
             <Number label="OrderId" v-model="value.orderId" :editMode="editMode"/>
             <Number label="Qty" v-model="value.qty" :editMode="editMode"/>
+            <String label="Status" v-model="value.status" :editMode="editMode"/>
+            <Boolean label="IsOffline" v-model="value.isOffline" :editMode="editMode"/>
         </v-card-text>
 
         <v-card-actions>

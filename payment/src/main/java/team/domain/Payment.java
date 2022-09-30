@@ -59,6 +59,18 @@ public class Payment  {
     
     
     private Integer qty;
+    
+    
+    
+    
+    
+    private String status;
+    
+    
+    
+    
+    
+    private Boolean isOffline;
 
     @PostPersist
     public void onPostPersist(){
@@ -113,6 +125,8 @@ public class Payment  {
         Payment payment = new Payment();
         repository().save(payment);
 
+        PaymentCompleted paymentCompleted = new PaymentCompleted(payment);
+        paymentCompleted.publishAfterCommit();
         */
 
         /** Example 2:  finding and process
@@ -122,6 +136,8 @@ public class Payment  {
             payment // do something
             repository().save(payment);
 
+            PaymentCompleted paymentCompleted = new PaymentCompleted(payment);
+            paymentCompleted.publishAfterCommit();
 
          });
         */
