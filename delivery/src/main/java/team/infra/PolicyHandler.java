@@ -40,7 +40,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        Delivery.notifyOrder(event);
+        Delivery.notifyOrder(event, orderService);
         
 
         
