@@ -118,12 +118,6 @@ http :8082/orderHistories
 [AWS 설정](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#ops-aws-setting)
 
 
-```
-
-eksctl create cluster --name team4 --version 1.21 --spot --managed --nodegroup-name standard-workers --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 3
-```
-
-
 ### git sync
 ```
 git pull
@@ -131,18 +125,61 @@ git pull
 git merge origin/template
 ```
 
+
+
+
+
+
 ## MariaDB
 [mariaDB 설정](https://github.com/msa-school/ddd-petstore-level6-layered-spring-jpa/blob/main/README.md)
 
 
+
+
+---
+
+#### AWS install
+```bash
+cd /workspace/aws
+sudo ./install
+
+```
+
+
+####  configure AWS Client 
+```bash
+aws configure
+AWS Access Key ID [None]: AKIA5T5A3YE2OAGFX65X
+AWS Secret Access Key [None]: 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
+Default region name [None]: ap-northeast-3
+Default output format [None]: json
+
+```
+
+### .bashrc
+
+```bash
+## K8s Settings
+KUBECTL=/workspace/team/kubectl
+export PATH=$KUBECTL:$PATH
+
+source <(kubectl completion bash)
+alias k=kubectl
+complete -o default -F __start_kubectl k
+```
+
+
 ### EKS
+#### create EKS
 
 ```
 export myclusterUserid=team4
 
 eksctl create cluster --name ${myclusterUserid} --version 1.21 --spot --managed --nodegroup-name standard-workers --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 3
+```
 
-
+#### config EKS Client
+```bash
 aws eks update-kubeconfig --name ${myclusterUserid}
 
  kubectl get nodes
@@ -153,6 +190,7 @@ ip-192-168-76-44.ap-northeast-3.compute.internal    Ready    <none>   13m   v1.2
 ```
 
 ### ECR
+#### get ECR Credential
 
 ```
 ECR_URI=936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
@@ -163,7 +201,7 @@ eyJwYXlsb2FkIjoiNTY1dFZKbmVtdVlTZmpuMEtIdEhQc
 ... 생략 ..
 ```
 
-## Docker Login to ECR
+### Docker Login to ECR
 ```
 export ECR_URI=936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
 export USER_NM=team4
@@ -179,6 +217,9 @@ Login Succeeded
 ```
 
 
+
+
+
 ### AWS Info
 - AWS ID: team4
 - REGION: ap-northeast-3
@@ -186,4 +227,6 @@ Login Succeeded
     - arn:aws:eks:ap-northeast-3:936103362868:cluster/team4
 - ECR:
   - 936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
+
+
 
