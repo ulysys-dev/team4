@@ -55,8 +55,6 @@ public class Store  {
     
     private Boolean isOffline;
 
-    private Boolean isOffline;
-
     @PostPersist
     public void onPostPersist(){
 
@@ -76,6 +74,7 @@ public class Store  {
     public void wrap(){
         FlowerWrapped flowerWrapped = new FlowerWrapped(this);
         flowerWrapped.publishAfterCommit();
+        //flowerWrapped.setOrderId(getOrderId());
 
     }
 
@@ -93,6 +92,9 @@ public class Store  {
         repository().save(store);
 
         FlowerWrapped flowerWrapped = new FlowerWrapped(store);
+
+        store.setOrderId(paymentCompleted.getOrderId());
+        
         flowerWrapped.publishAfterCommit();
         
 

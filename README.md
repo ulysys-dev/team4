@@ -17,7 +17,7 @@ cd /bin
 | orders        | 8082   |
 | stores        | 8083   |
 | payments      | 8084   |
-| notify        | 8086   |
+| notify        | 8085   |
 
 
 # start Shell
@@ -29,23 +29,23 @@ WORKSPACE=/workspace/team4
 
 cd $WORKSPACE
 cd delivery
-mvn sprint-boot:run
+mvn spring-boot:run
 
 cd $WORKSPACE
 cd Notify
-mvn sprint-boot:run
+mvn spring-boot:run
 
 cd $WORKSPACE
 cd store
-mvn sprint-boot:run
+mvn spring-boot:run
 
 cd $WORKSPACE
 cd payment
-mvn sprint-boot:run
+mvn spring-boot:run
 
 cd $WORKSPACE
 cd order
-mvn sprint-boot:run
+mvn spring-boot:run
 
 cd $WORKSPACE
 cd kafka
@@ -80,6 +80,10 @@ fuser -k 8086/tcp
 http :8084/payments orderId=1 qty=3 status="PAYED"
 http :8084/payments
 
+
+## Store
+http PUT :8083/stores/1/wrap orderId=1
+
 ```
 
 ## CQRS
@@ -93,3 +97,11 @@ http :8084/payments
 
 eksctl create cluster --name team4 --version 1.21 --spot --managed --nodegroup-name standard-workers --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 3
 ```
+
+
+### git sync
+```
+git pull
+
+git 
+``

@@ -33,16 +33,6 @@ public class Payment  {
     
     private Integer qty;
     
-    
-    
-    
-    
-    private String status;
-    
-    
-    
-    
-    
     private Boolean isOffline;
 
     private String status;
@@ -90,21 +80,20 @@ public class Payment  {
         */
       
         PaymentCanceled paymentCanceled = new PaymentCanceled();
-
         
-        paymentCanceled.setId(null);
-        paymentCanceled.setFlowerId(orderCancelled.getFlowerId());
-        paymentCanceled.setPrice(orderCancelled.getPrice());
-        paymentCanceled.setPayDate(orderCancelled.getOrderDate());
-        paymentCanceled.setCardNo(null);
-        paymentCanceled.setOrderId(orderCancelled.getId());
-        paymentCanceled.setQty(orderCancelled.getQty());
+        paymentCanceled = paymentCanceled.findByOrderId(orderCancelled.getId());
+        // paymentCanceled.setFlowerId(orderCancelled.getFlowerId());
+        // paymentCanceled.setPrice(orderCancelled.getPrice());
+        // paymentCanceled.setPayDate(orderCancelled.getOrderDate());
+        // paymentCanceled.setCardNo(null);
+        // paymentCanceled.setOrderId(orderCancelled.getId());
+        // paymentCanceled.setQty(orderCancelled.getQty());
         paymentCanceled.setStatus("CANCELED");
-       
 
-        
-        
+        // repository().save(paymentCanceled, paymentCanceled.getId());
+    
     }
+    
     public static void pay(OrderPlaced orderPlaced){
 
         /** Example 1:  new item 
@@ -119,7 +108,7 @@ public class Payment  {
         payment.setPrice(orderPlaced.getPrice());
         payment.setPayDate(orderPlaced.getOrderDate());
         payment.setCardNo(null);
-        payment.setOrderId(orderPlaced.getId();
+        payment.setOrderId(orderPlaced.getId());
         payment.setQty(orderPlaced.getQty());
         payment.setStatus("PAYED");
         
