@@ -1,7 +1,7 @@
 ## kafka consumer 접속
 ```
 WORKSPACE=/workspace/team4
-cd $WORKSPACE
+cd $WORKSPACE/kafka
 
 docker-compose exec -it kafka /bin/bash
 cd /bin
@@ -267,6 +267,9 @@ kubectl exec --tty -i my-kafka-client -- bash
         kafka-console-consumer.sh \
         --bootstrap-server my-kafka:9092 \
         --topic team
+
+    CHECK
+       kafka-topics.sh --list --zookeeper  my-kafka-zookeeper:2181
 ```
 
 ##### login dockerHub
@@ -291,7 +294,7 @@ cd /workspace/team4/${MS_ID}
 mvn package -B -DskipTests
 ```
 
-##### build package 
+##### build docker
 ```
 export MS_ID=payment
 export DOCKER_ID=ulysysdev
@@ -300,5 +303,171 @@ export DOCKER_TAG=v1
 cd /workspace/team4/${MS_ID}
 
 docker build -t ${DOCKER_ID}/${MS_ID}:${DOCKER_TAG} .
-docker run ${DOCKER_ID}/${MS_ID}:${DOCKER_TAG}
+# docker run ${DOCKER_ID}/${MS_ID}:${DOCKER_TAG}
+```
+
+##### push docker 
+```bash
+export MS_ID=payment
+export DOCKER_ID=ulysysdev
+export DOCKER_TAG=v1
+
+cd /workspace/team4/${MS_ID}
+
+docker push ${DOCKER_ID}/${MS_ID}:${DOCKER_TAG}
+```
+
+##### update k8s deployment manifest
+
+```
+
+
+```
+
+#####  install Ingress Controller
+```
+helm repo add stable https://charts.helm.sh/stable
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+kubectl create namespace ingress-basic
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace=ingress-basic
+```
+
+#####
+```yaml
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata: 
+  name: "ingress"
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+spec: 
+  rules: 
+    - 
+      http: 
+        paths: 
+          - 
+            path: /orders
+            pathType: Prefix
+            backend: 
+              serviceName: order
+              servicePort: 8080
+          - 
+            path: /payments
+            pathType: Prefix
+            backend: 
+              serviceName: payment
+              servicePort: 8080
+          - 
+            path: /stores
+            pathType: Prefix
+            backend: 
+              serviceName: store
+              servicePort: 8080
+          - 
+            path: /deliveries
+            pathType: Prefix
+            backend: 
+              serviceName: delivery
+              servicePort: 8080
+```
+
+
+```bash
+kubectl create -f ingress.yaml
+```
+
+##### check k8s process
+```bash
+gitpod /workspace/team4/gateway/kubernetes (main) $ k get all -A
+NAMESPACE       NAME                                                          READY   STATUS    RESTARTS   AGE
+default         pod/my-kafka-0                                                1/1     Running   1          82m
+default         pod/my-kafka-client                                           1/1     Running   0          78m
+default         pod/my-kafka-zookeeper-0                                      1/1     Running   0          82m
+default         pod/payment-76469bc4c5-slg4j                                  1/1     Running   0          12m
+ingress-basic   pod/nginx-ingress-ingress-nginx-controller-5d88d44856-69srv   1/1     Running   0          2m21s
+kube-system     pod/aws-node-n8pq9                                            1/1     Running   0          3h7m
+kube-system     pod/aws-node-rmdxv                                            1/1     Running   0          3h7m
+kube-system     pod/aws-node-tjmc2                                            1/1     Running   0          3h7m
+kube-system     pod/coredns-79cc4658db-bv55k                                  1/1     Running   0          3h15m
+kube-system     pod/coredns-79cc4658db-s9qqr                                  1/1     Running   0          3h15m
+kube-system     pod/kube-proxy-k2k4l                                          1/1     Running   0          3h7m
+kube-system     pod/kube-proxy-qwgv8                                          1/1     Running   0          3h7m
+kube-system     pod/kube-proxy-w6xvp                                          1/1     Running   0          3h7m
+
+NAMESPACE       NAME                                                       TYPE           CLUSTER-IP       EXTERNAL-IP                                                                    PORT(S)                      AGE
+default         service/kubernetes                                         ClusterIP      10.100.0.1       <none>                                                                         443/TCP                      3h15m
+default         service/my-kafka                                           ClusterIP      10.100.198.113   <none>                                                                         9092/TCP                     82m
+default         service/my-kafka-headless                                  ClusterIP      None             <none>                                                                         9092/TCP,9093/TCP            82m
+default         service/my-kafka-zookeeper                                 ClusterIP      10.100.243.96    <none>                                                                         2181/TCP,2888/TCP,3888/TCP   82m
+default         service/my-kafka-zookeeper-headless                        ClusterIP      None             <none>                                                                         2181/TCP,2888/TCP,3888/TCP   82m
+default         service/payment                                            ClusterIP      10.100.64.194    <none>                                                                         8080/TCP                     12m
+ingress-basic   service/nginx-ingress-ingress-nginx-controller             LoadBalancer   10.100.241.105   a275654bef1e544208389d4833f9dd7d-1462542699.ap-northeast-3.elb.amazonaws.com   80:32276/TCP,443:32586/TCP   2m22s
+ingress-basic   service/nginx-ingress-ingress-nginx-controller-admission   ClusterIP      10.100.192.243   <none>                                                                         443/TCP                      2m22s
+kube-system     service/kube-dns                                           ClusterIP      10.100.0.10      <none>                                                                         53/UDP,53/TCP                3h15m
+
+NAMESPACE     NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+kube-system   daemonset.apps/aws-node     3         3         3       3            3           <none>          3h15m
+kube-system   daemonset.apps/kube-proxy   3         3         3       3            3           <none>          3h15m
+
+NAMESPACE       NAME                                                     READY   UP-TO-DATE   AVAILABLE   AGE
+default         deployment.apps/payment                                  1/1     1            1           12m
+ingress-basic   deployment.apps/nginx-ingress-ingress-nginx-controller   1/1     1            1           2m22s
+kube-system     deployment.apps/coredns                                  2/2     2            2           3h15m
+
+NAMESPACE       NAME                                                                DESIRED   CURRENT   READY   AGE
+default         replicaset.apps/payment-76469bc4c5                                  1         1         1       12m
+ingress-basic   replicaset.apps/nginx-ingress-ingress-nginx-controller-5d88d44856   1         1         1       2m22s
+kube-system     replicaset.apps/coredns-79cc4658db                                  2         2         2       3h15m
+
+NAMESPACE   NAME                                  READY   AGE
+default     statefulset.apps/my-kafka             1/1     82m
+default     statefulset.apps/my-kafka-zookeeper   1/1     82m
+```
+
+##### install HTTPie Pod
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: "v1"
+kind: "Pod"
+metadata: 
+  name: httpie
+  labels: 
+    name: httpie
+spec: 
+  containers: 
+    - 
+      name: httpie
+      image: clue/httpie
+      command:
+        - sleep
+        - "36000"
+EOF
+```
+```
+kubectl exec -it httpie bin/bash
+```
+
+###### install Seige Pod
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: siege
+spec:
+  containers:
+  - name: siege
+    image: apexacme/siege-nginx
+EOF
+```
+```bash
+kubectl exec -it siege bin/bash
+```
+
+
+###### install Metric server
+```
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
+kubectl get deployment metrics-server -n kube-system
 ```

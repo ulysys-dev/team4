@@ -1,0 +1,35 @@
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata: 
+  name: "ingress"
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+spec: 
+  rules: 
+    - 
+      http: 
+        paths: 
+          - 
+            path: /orders
+            pathType: Prefix
+            backend: 
+              serviceName: order
+              servicePort: 8080
+          - 
+            path: /payments
+            pathType: Prefix
+            backend: 
+              serviceName: payment
+              servicePort: 8080
+          - 
+            path: /stores
+            pathType: Prefix
+            backend: 
+              serviceName: store
+              servicePort: 8080
+          - 
+            path: /deliveries
+            pathType: Prefix
+            backend: 
+              serviceName: delivery
+              servicePort: 8080
