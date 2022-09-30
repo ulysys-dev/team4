@@ -18,10 +18,7 @@
 
         <v-card-text>
             <Number label="FlowerId" v-model="value.flowerId" :editMode="editMode"/>
-            <String label="FlowerName" v-model="value.flowerName" :editMode="editMode"/>
             <Number label="FlowerCnt" v-model="value.flowerCnt" :editMode="editMode"/>
-            <Boolean label="PackingYn" v-model="value.packingYn" :editMode="editMode"/>
-            <String label="IsOffline" v-model="value.isOffline" :editMode="editMode"/>
             <Number label="OrderId" v-model="value.orderId" :editMode="editMode"/>
             <Number label="FlowerPrice" v-model="value.flowerPrice" :editMode="editMode"/>
         </v-card-text>
@@ -63,6 +60,14 @@
         </v-card-actions>
         <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn
+                    v-if="!editMode"
+                    color="deep-purple lighten-2"
+                    text
+                    @click="wrap"
+            >
+                Wrap
+            </v-btn>
         </v-card-actions>
 
         <v-snackbar
@@ -193,6 +198,25 @@
             },
             change(){
                 this.$emit('input', this.value);
+            },
+            async wrap() {
+                try {
+                    if(!this.offline) {
+                        var temp = await axios.put(axios.fixUrl(this.value._links['wrap'].href))
+                        for(var k in temp.data) {
+                            this.value[k]=temp.data[k];
+                        }
+                    }
+
+                    this.editMode = false;
+                } catch(e) {
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
+                }
             },
         },
     }

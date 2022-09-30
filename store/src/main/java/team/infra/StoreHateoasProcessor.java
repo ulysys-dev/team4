@@ -11,6 +11,7 @@ public class StoreHateoasProcessor implements RepresentationModelProcessor<Entit
 
     @Override
     public EntityModel<Store> process(EntityModel<Store> model) {
+        model.add(Link.of(model.getRequiredLink("self").getHref() + "/wrap").withRel("wrap"));
 
         
         return model;

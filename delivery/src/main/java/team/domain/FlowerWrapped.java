@@ -10,7 +10,6 @@ public class FlowerWrapped extends AbstractEvent {
 
     private Long id;
     private Long flowerId;
-    private String flowerName;
     private Integer flowerCnt;
     private Long orderId;
 }

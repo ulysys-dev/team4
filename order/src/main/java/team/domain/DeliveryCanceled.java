@@ -1,9 +1,10 @@
 package team.domain;
 
-import team.domain.*;
 import team.infra.AbstractEvent;
-import lombok.*;
+import lombok.Data;
 import java.util.*;
+import team.domain.*;
+import lombok.*;
 
 @Data
 @ToString
@@ -14,5 +15,3 @@ public class DeliveryCanceled extends AbstractEvent {
     private Date deliveryCancelDate;
 
 }
-
-

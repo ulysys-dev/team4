@@ -14,18 +14,12 @@
                             
                             
                             
-                            
-                            
-                            
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="font-size:25px; font-weight:700;">
                             [ Id :  {{data.id }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ FlowerId :  {{data.flowerId }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            [ FlowerName :  {{data.flowerName }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ FlowerCnt :  {{data.flowerCnt }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            [ PackingYn :  {{data.packingYn }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            [ IsOffline :  {{data.isOffline }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ OrderId :  {{data.orderId }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ FlowerPrice :  {{data.flowerPrice }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </v-list-item-subtitle>
@@ -110,10 +104,7 @@
             
             this.newValue = {
                 'flowerId': 0,
-                'flowerName': '',
                 'flowerCnt': 0,
-                'packingYn': false,
-                'isOffline': '',
                 'orderId': 0,
                 'flowerPrice': 0,
             }

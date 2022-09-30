@@ -31,7 +31,7 @@ public class OrderHistoryViewHandler {
             orderHistory.setOrderId(paymentCompleted.getOrderId());
             orderHistory.setFlowerId(paymentCompleted.getFlowerId());
             orderHistory.setQty(paymentCompleted.getQty());
-            orderHistory.setPrice(paymentCompleted.getPrice().;
+            orderHistory.setPrice(paymentCompleted.getPrice());
             // view 레파지 토리에 save
             orderHistoryRepository.save(orderHistory);
 

@@ -20,4 +20,23 @@ public class StoreController {
 
 
 
+    @RequestMapping(value = "stores/{id}/wrap",
+        method = RequestMethod.PUT,
+        produces = "application/json;charset=UTF-8")
+    public Store wrap(@PathVariable(value = "id") Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            System.out.println("##### /store/wrap  called #####");
+            Optional<Store> optionalStore = storeRepository.findById(id);
+            
+            optionalStore.orElseThrow(()-> new Exception("No Entity Found"));
+            Store store = optionalStore.get();
+            store.wrap();
+            
+            storeRepository.save(store);
+            return store;
+            
+    }
+    
+
+
+
 }

@@ -15,6 +15,7 @@
                             
                             
                             
+                            
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="font-size:25px; font-weight:700;">
@@ -24,6 +25,7 @@
                             [ DeliveryCompleteDate :  {{data.deliveryCompleteDate }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ DeliveryCancelDate :  {{data.deliveryCancelDate }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ Address :  {{data.address }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            [ Status :  {{data.status }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </v-list-item-subtitle>
 
                     </v-list-item-content>
@@ -106,10 +108,11 @@
             
             this.newValue = {
                 'orderId': 0,
-                'deliveryStartDate': '2022-09-29',
-                'deliveryCompleteDate': '2022-09-29',
-                'deliveryCancelDate': '2022-09-29',
+                'deliveryStartDate': '2022-09-30',
+                'deliveryCompleteDate': '2022-09-30',
+                'deliveryCancelDate': '2022-09-30',
                 'address': '',
+                'status': '',
             }
         },
         methods: {

@@ -1,7 +1,6 @@
 package team.domain;
 
 import team.domain.FlowerSold;
-import team.domain.FlowerWrapped;
 import team.StoreApplication;
 import javax.persistence.*;
 import java.util.List;
@@ -34,25 +33,7 @@ public class Store  {
     
     
     
-    private String flowerName;
-    
-    
-    
-    
-    
     private Integer flowerCnt;
-    
-    
-    
-    
-    
-    private Boolean packingYn;
-    
-    
-    
-    
-    
-    private String isOffline;
     
     
     
@@ -73,11 +54,6 @@ public class Store  {
         FlowerSold flowerSold = new FlowerSold(this);
         flowerSold.publishAfterCommit();
 
-
-
-        FlowerWrapped flowerWrapped = new FlowerWrapped(this);
-        flowerWrapped.publishAfterCommit();
-
     }
 
     public static StoreRepository repository(){
@@ -87,6 +63,11 @@ public class Store  {
 
 
 
+    public void wrap(){
+        FlowerWrapped flowerWrapped = new FlowerWrapped(this);
+        flowerWrapped.publishAfterCommit();
+
+    }
 
     public static void ifOnlineOrder(PaymentCompleted paymentCompleted){
 

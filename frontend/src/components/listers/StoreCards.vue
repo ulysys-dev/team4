@@ -69,10 +69,7 @@
             
             me.newValue = {
                 'flowerId': 0,
-                'flowerName': '',
                 'flowerCnt': 0,
-                'packingYn': false,
-                'isOffline': '',
                 'orderId': 0,
                 'flowerPrice': 0,
             }
