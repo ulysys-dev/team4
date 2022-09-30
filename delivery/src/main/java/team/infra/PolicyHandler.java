@@ -55,13 +55,6 @@ public class PolicyHandler{
         PaymentCanceled event = paymentCanceled;
         System.out.println("\n\n##### listener DeliveryCancel : " + paymentCanceled + "\n\n");
 
-        if(paymentCanceled.isMe()){
-            List<Delivery> deliveryList = deliveryRepository.findByOrderId(paymentCanceled.getOrderId());
-            if ((deliveryList != null) && !deliveryList.isEmpty()){
-                deliveryRepository.deleteAll(deliveryList);
-            }
-        }
-        
 
         // Sample Logic //
         Delivery.deliveryCancel(event);

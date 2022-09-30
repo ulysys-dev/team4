@@ -104,18 +104,18 @@ public class Delivery  {
         deliveryCanceled.publishAfterCommit();
         */
 
-        /** Example 2:  finding and process
+        /** Example 2:  finding and process         */
         
-        repository().findById(paymentCanceled.get???()).ifPresent(delivery->{
+        // repository().findByOrderId(paymentCanceled.getOrderId()).ifPresent(delivery->{
             
-            delivery // do something
-            repository().save(delivery);
+        //     delivery // do something
+        //     repository().save(delivery);
 
-            DeliveryCanceled deliveryCanceled = new DeliveryCanceled(delivery);
-            deliveryCanceled.publishAfterCommit();
+        //     DeliveryCanceled deliveryCanceled = new DeliveryCanceled(delivery);
+        //     deliveryCanceled.publishAfterCommit();
 
-         });
-        */
+        //  });
+
 
         
     }

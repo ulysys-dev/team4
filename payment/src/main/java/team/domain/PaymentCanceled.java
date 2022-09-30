@@ -16,11 +16,17 @@ public class PaymentCanceled extends AbstractEvent {
     private Long orderId;
     private Integer qty;
     private Double price;
+    private String status;
 
     public PaymentCanceled(Payment aggregate){
         super(aggregate);
     }
     public PaymentCanceled(){
         super();
+    }
+    public PaymentCanceled findByOrderId(Long id2) {
+        return null;
+    }
+    public void setStatus(String string) {
     }
 }

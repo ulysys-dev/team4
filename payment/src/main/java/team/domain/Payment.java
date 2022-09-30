@@ -76,9 +76,21 @@ public class Payment  {
 
          });
         */
+      
+        PaymentCanceled paymentCanceled = new PaymentCanceled();
+
         
+        paymentCanceled.setId(null);
+        paymentCanceled.setFlowerId(orderCancelled.getFlowerId());
+        paymentCanceled.setPrice(orderCancelled.getPrice());
+        paymentCanceled.setPayDate(orderCancelled.getOrderDate());
+        paymentCanceled.setCardNo(null);
+        paymentCanceled.setOrderId(orderCancelled.getId());
+        paymentCanceled.setQty(orderCancelled.getQty());
+        paymentCanceled.setStatus("CANCELED");
+       
 
-
+        
         
     }
     public static void pay(OrderPlaced orderPlaced){
