@@ -1,5 +1,7 @@
 package team.infra;
 
+import java.util.List;
+
 import javax.naming.NameParser;
 
 import javax.naming.NameParser;
@@ -40,7 +42,7 @@ public class PolicyHandler{
         
 
         // Sample Logic //
-        Delivery.notifyOrder(event);
+        Delivery.notifyOrder(event, orderService);
         
 
         
@@ -53,8 +55,6 @@ public class PolicyHandler{
         PaymentCanceled event = paymentCanceled;
         System.out.println("\n\n##### listener DeliveryCancel : " + paymentCanceled + "\n\n");
 
-
-        
 
         // Sample Logic //
         Delivery.deliveryCancel(event);
