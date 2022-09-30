@@ -10,8 +10,8 @@ mvn spring-boot:run
 
 ```
 mvn package -B -DskipTests
-docker build -t username/delivery:v1 .
-docker run username/delivery:v1
+docker build -t tkson501/delivery:v1 .
+docker run tkson501/delivery:v1
 ```
 
 ## Push images and running in Kubernetes

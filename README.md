@@ -88,6 +88,15 @@ http :8083/stores flowerId=3 flowerCnt=8 flowerPrice=4000
 http :8083/stores flowerId=4 flowerCnt=12 flowerPrice=6000
 http :8083/stores flowerId=5 flowerCnt=1 flowerPrice=1000
 
+기본 코드에 아래 내용 추가
+1) store >>> infra > PolicyHandler.java
+  - getIsOffline() 값으로 분기 처리
+
+2) store >>> domain > Store.java
+  - onPostPersist() 주석처리 : 중복 포스팅 발생
+  - ifOnlineOrder() paymentCompleted 받은 값 저장
+  - ifOfflineOrder() paymentCompleted 받은 값 저장
+
 ```
 ## Order
 http POST :8082/orders flowerId=1 qty=2 address="pusan" isOffline=false phoneNumber="01012345678" price="20000"
@@ -169,4 +178,12 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 ```
 
+
+### AWS Info
+- AWS ID: team4
+- REGION: ap-northeast-3
+- EKS: 
+    - arn:aws:eks:ap-northeast-3:936103362868:cluster/team4
+- ECR:
+  - 936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
 

@@ -99,5 +99,5 @@ substitutions:
 options:
   env:
     #    # location/name of GKE cluster (used by all kubectl commands)
-    - CLOUDSDK_COMPUTE_ZONE=asia-northeast1-a
-    - CLOUDSDK_CONTAINER_CLUSTER=cluster-1
+    - CLOUDSDK_COMPUTE_ZONE=ap-northeast-3
+    - CLOUDSDK_CONTAINER_CLUSTER=team4
