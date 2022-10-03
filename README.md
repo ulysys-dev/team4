@@ -99,20 +99,29 @@ http :8083/stores flowerId=5 flowerCnt=1 flowerPrice=1000
 
 ```
 ## Order
+```
 http POST :8082/orders flowerId=1 qty=2 address="pusan" isOffline=false phoneNumber="01012345678" price="20000"
 http POST :8082/orders flowerId=1 qty=1 address="seoul" isOffline=true phoneNumber="01012345678" price="10000"
+```
 
 ## Correlation -> 500 에러
+```
 http POST :8082/orders flowerId=1 qty=20 address="pusan" isOffline=false phoneNumber="01012345678" price="20000"
+```
 
 ## cacel Order
+```
 http PUT :8082/orders/1/cancelorder
+```
 
 ## CQRS
+```
 http :8082/orderHistories
+```
 
 ## CQRS
 [CQRS 설명](https://www.youtube.com/watch?v=1c1J7dNh4u8)
+
 
 ### AWS Cloud
 [AWS 설정](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#ops-aws-setting)
@@ -134,30 +143,78 @@ git merge origin/template
 [mariaDB 설정](https://github.com/msa-school/ddd-petstore-level6-layered-spring-jpa/blob/main/README.md)
 
 
-
-
 ---
 
-#### AWS install
-```bash
-cd /workspace/aws
-sudo ./install
 
+## 1. AWS cli Client 설치
+### 1.1 download and install AWS cli
+```bash
+## 다음은 init.sh 에 포함되어 있기 때문에 생략 가능합니다.
+## awscliv2.zip을 현재 작업하는 pwd 의 상위 디렉토리에 download 받는 것에 주의 바랍니다.
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "../awscliv2.zip"
+unzip ../awscliv2.zip -d ../
+sudo .././aws/install
 ```
 
 
-####  configure AWS Client 
+### 1.2 configure AWS Client
+- MAS EZ에서 제공하는 AWS 계정을 사용하여 설정 합니다.
 ```bash
 aws configure
 AWS Access Key ID [None]: 
 AWS Secret Access Key [None]: 
 Default region name [None]: 
 Default output format [None]: json
-
 ```
 
-### .bashrc
+## 2. AWS EKS Cli 설치
+### 2.1 download and install AWS EKS cli
+- 설치하려는 linux 버전에 맞는 eks cli를 다운로드하고, /usr/local/bin으로 옮겨 전체 시스템에서 사용할 수 있는 PATH 로 옮겨 둡니다.
+```bash
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+```
 
+## 3. Kubectl 설치
+- 현재 지원되는 안정적인 버전을 참조하여 kubectl을 다운로드하고 전체 시스템에서 사용할 수 있는 PATH로 옮겨 둡니다.
+```
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+## 4. EKS Cluster 구성
+- CAPSTONE 평가의 기준에 따라서 설정을 요청한 명칭(team4) 로 클러스터를 설치 합니다.
+  - 설치 작업은 약 30분 정도 예상되니, 시간 소요를 고려하여 스케쥴하는 편이 좋습니다.
+```
+export myClusterUserid=team4
+
+eksctl create cluster --name ${myClusterUserid}  \
+--version 1.21 \
+--spot --managed --nodegroup-name standard-workers \
+--node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 3
+```
+- EKS Cluster 가 설치 완료 된 후 정보를 조회하여 확인 합니다.
+```
+eksctl get cluster
+```
+
+
+## 5. EKS Cluster에 접근하기 위한 Kubectl Context를 등록 합니다.
+```
+export myClusterUserid=team4
+aws eks update-kubeconfig --name ${myclusterUserid}
+```
+- K8s Cluster 의 Node 상태 확인
+```
+ kubectl get nodes
+NAME                                                STATUS   ROLES    AGE   VERSION
+ip-192-168-31-153.ap-northeast-3.compute.internal   Ready    <none>   13m   v1.21.14-eks-ba74326
+ip-192-168-45-158.ap-northeast-3.compute.internal   Ready    <none>   13m   v1.21.14-eks-ba74326
+ip-192-168-76-44.ap-northeast-3.compute.internal    Ready    <none>   13m   v1.21.14-eks-ba74326
+```
+
+## 6. kubectl 의 shortcut alias 등록
+- .bashrc 에 alias 와 auto complete 를 수행할 command 및 kubectl 을 k로 단축하는 명령어를 추가 합니다.
 ```bash
 
 cat << EOF | tee -a ~/.bashrc
@@ -168,43 +225,25 @@ alias k=kubectl
 complete -o default -F __start_kubectl k
 EOF
 ```
-
-
-### EKS
-#### create EKS
-
 ```
-export myclusterUserid=team4
-
-eksctl create cluster --name ${myclusterUserid} --version 1.21 --spot --managed --nodegroup-name standard-workers --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 3
+source ~/.bashrc
 ```
 
-#### config EKS Client
-```bash
-
-export myclusterUserid=team4
-aws eks update-kubeconfig --name ${myclusterUserid}
-
- kubectl get nodes
-NAME                                                STATUS   ROLES    AGE   VERSION
-ip-192-168-31-153.ap-northeast-3.compute.internal   Ready    <none>   13m   v1.21.14-eks-ba74326
-ip-192-168-45-158.ap-northeast-3.compute.internal   Ready    <none>   13m   v1.21.14-eks-ba74326
-ip-192-168-76-44.ap-northeast-3.compute.internal    Ready    <none>   13m   v1.21.14-eks-ba74326
-```
-
-### ECR
-#### get ECR Credential
-
+## 7. Docker 의 Registry로 ECR을 등록 합니다.
+- 이 등록작업은 만약 Public으로 Docker Hub를 사용하는 경우는 Skip 해도 좋습니다.
+  - 실제 Product 환경에서는 보완을 고려하여 Private Docker Registry를 설정하는 ECR을 사용을 권고합니다.
+- AWS Console을 통해서 ECR을 생성하고 이를 현재 사용중인 Terminal에 설정 하여, Docker Image의 Registery로 등록 합니다.
+- ECR을 사용하기 위한 계정의 패스워드는 아래의 cli를 사용하여 확인 합니다.
 ```
 ECR_URI=936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
-
 export REGION=ap-northeast-3
- $ aws --region $REGION ecr get-login-password 
+
+aws --region $REGION ecr get-login-password 
 eyJwYXlsb2FkIjoiNTY1dFZKbmVtdVlTZmpuMEtIdEhQc
 ... 생략 ..
 ```
-
-### Docker Login to ECR
+- ECR을 현재 접속한 Docker Client에서 로그인합니다.
+  - 로그인에 성공하면 현재의 Terminal에서 ECR에 Image를 up/download 할 수 있습니다.  
 ```
 export ECR_URI=936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
 export USER_NM=team4
