@@ -5,7 +5,7 @@ metadata:
   labels:
     app: payment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: payment
@@ -33,9 +33,24 @@ spec:
           #       secretKeyRef:
           #         name: mysql-pass
           #         key: password
+          # volumeMounts:
+          #   - name: volume
+          #     mountPath: "/mnt/aws"              
+          # volumes:
+          #   - name: volume
+          #     PersistentVolumeClaim:
+          #       ClaimName: aws-efs
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "200m"
+              memory: "512Mi"
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              # path: '/actuator/health'
+              path: '/payments'
               port: 8080
             initialDelaySeconds: 10
             timeoutSeconds: 2
@@ -43,7 +58,8 @@ spec:
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              # path: '/actuator/health'
+              path: '/payments'
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2

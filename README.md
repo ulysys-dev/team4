@@ -145,7 +145,7 @@ git merge origin/template
 
 ---
 
-
+# 가. Kubernetes Cluster 설치
 ## 1. AWS cli Client 설치
 ### 1.1 download and install AWS cli
 ```bash
@@ -177,7 +177,7 @@ sudo mv /tmp/eksctl /usr/local/bin
 
 ## 3. Kubectl 설치
 - 현재 지원되는 안정적인 버전을 참조하여 kubectl을 다운로드하고 전체 시스템에서 사용할 수 있는 PATH로 옮겨 둡니다.
-```
+```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 ```
@@ -185,7 +185,7 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 ## 4. EKS Cluster 구성
 - CAPSTONE 평가의 기준에 따라서 설정을 요청한 명칭(team4) 로 클러스터를 설치 합니다.
   - 설치 작업은 약 30분 정도 예상되니, 시간 소요를 고려하여 스케쥴하는 편이 좋습니다.
-```
+```bash
 export myClusterUserid=team4
 
 eksctl create cluster --name ${myClusterUserid}  \
@@ -194,18 +194,18 @@ eksctl create cluster --name ${myClusterUserid}  \
 --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 3
 ```
 - EKS Cluster 가 설치 완료 된 후 정보를 조회하여 확인 합니다.
-```
+```bash
 eksctl get cluster
 ```
 
 
 ## 5. EKS Cluster에 접근하기 위한 Kubectl Context를 등록 합니다.
-```
+```bash
 export myClusterUserid=team4
 aws eks update-kubeconfig --name ${myclusterUserid}
 ```
 - K8s Cluster 의 Node 상태 확인
-```
+```bash
  kubectl get nodes
 NAME                                                STATUS   ROLES    AGE   VERSION
 ip-192-168-31-153.ap-northeast-3.compute.internal   Ready    <none>   13m   v1.21.14-eks-ba74326
@@ -225,7 +225,7 @@ alias k=kubectl
 complete -o default -F __start_kubectl k
 EOF
 ```
-```
+```bash
 source ~/.bashrc
 ```
 
@@ -234,7 +234,7 @@ source ~/.bashrc
   - 실제 Product 환경에서는 보완을 고려하여 Private Docker Registry를 설정하는 ECR을 사용을 권고합니다.
 - AWS Console을 통해서 ECR을 생성하고 이를 현재 사용중인 Terminal에 설정 하여, Docker Image의 Registery로 등록 합니다.
 - ECR을 사용하기 위한 계정의 패스워드는 아래의 cli를 사용하여 확인 합니다.
-```
+```bash
 ECR_URI=936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
 export REGION=ap-northeast-3
 
@@ -244,7 +244,7 @@ eyJwYXlsb2FkIjoiNTY1dFZKbmVtdVlTZmpuMEtIdEhQc
 ```
 - ECR을 현재 접속한 Docker Client에서 로그인합니다.
   - 로그인에 성공하면 현재의 Terminal에서 ECR에 Image를 up/download 할 수 있습니다.  
-```
+```bash
 export ECR_URI=936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
 export USER_NM=team4
 docker login --username AWS -p $(aws --region $REGION ecr get-login-password) $ECR_URI
@@ -259,62 +259,62 @@ Login Succeeded
 ```
 
 
+# 나. Kubernetes Support
 
-
-
-### AWS Info
-- AWS ID: team4
-- REGION: ap-northeast-3
-- EKS: 
-    - arn:aws:eks:ap-northeast-3:936103362868:cluster/team4
-- ECR:
-  - 936103362868.dkr.ecr.ap-northeast-3.amazonaws.com/team4
-
-
-
-#### install heml
+## 1. install Helm
 [heml & kafka](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#ops-utility)
+- Helm Client 설치
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
 chmod 700 get_helm.sh
 ./get_helm.sh
 ```
 
-
-#### install kafka without namespace
+### 2. install HTTPie Pod
+- http Request를 Cli 로 만들기 위해서 설치 합니다.
 ```bash
-helm repo update
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install my-kafka bitnami/kafka
+cat <<EOF | kubectl apply -f -
+apiVersion: "v1"
+kind: "Pod"
+metadata: 
+  name: httpie
+  labels: 
+    name: httpie
+spec: 
+  containers: 
+    - 
+      name: httpie
+      image: clue/httpie
+      command:
+        - sleep
+        - "36000"
+EOF
+```
+- 생성한 pod 에 terminal 접속하기
+```bash
+kubectl exec -it httpie bin/bash
 ```
 
-#### check kafka topics without namespace
+### 3. Seige Pod
+- K8s의 Circuit Break 및 Horizonal Pod Autoscaler 설정 시, load를 만들기 위해서 설치 합니다.
+```
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: siege
+spec:
+  containers:
+  - name: siege
+    image: apexacme/siege-nginx
+EOF
+```
+- siege pod 접속하기
 ```bash
-kubectl run my-kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r0 --command -- sleep infinity
-
-## in container
-kubectl exec --tty -i my-kafka-client -- bash
-
-    PRODUCER:
-        kafka-console-producer.sh \
-            --broker-list my-kafka-0.my-kafka-headless:9092 \
-            --topic team
-
-    CONSUMER:
-        kafka-console-consumer.sh \
-            --bootstrap-server my-kafka:9092 \
-            --topic team \
-            --from-beginning
-
-        kafka-console-consumer.sh \
-        --bootstrap-server my-kafka:9092 \
-        --topic team
-
-    CHECK
-       kafka-topics.sh --list --zookeeper  my-kafka-zookeeper:2181
+kubectl exec -it siege bin/bash
 ```
 
-##### login dockerHub
+### 4. login dockerHub
 ```
  docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
@@ -327,8 +327,376 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 ```
 
-##### build package 
+
+# 다. CAPSTONE 준비
+### 1. install Metric server
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
+kubectl get deployment metrics-server -n kube-system
 ```
+
+### 2. kafka 설치
+- kafka는 helm을 사용하여 설치 합니다.
+- CAPSTONE의 Application는 kafka를 Default Namespace를 사용하는 것으로 기본 설정되어 있습니다.
+- 그래서 여기서는 default Namespace에 kafka를 설치 합니다.
+```bash
+helm repo update
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-kafka bitnami/kafka
+```
+- 만약 특정 Namespace를 사용하도록 설정하는 경우는
+  - 아래의 예제는 Namespace를 kafka를 사용하는 경우 임
+```bash
+helm repo update
+helm repo add bitnami https://charts.bitnami.com/bitnami
+kubectl create ns kafka
+helm install my-kafka bitnami/kafka --namespace kafka
+```
+
+#### 2.1 kafka Client
+- kafka의 Topic에 대해서 수신되는 메시지를 보는 방법은 아래와 같습니다.
+- kafka client(Pod)를 설치 후 해당 client를 통해서 kafka server에 접속해서 kafka topic의 메시지를 확인 합니다.
+  - 여기서는 topic 명이 `team` 입니다.
+  - 생성된 kafka의 Service 는 `my-kafka` 입니다.
+  - 생성된 kafka zookeeper의 Service는 `my-kafka-zookeeper` 입니다.
+ 
+- [Kafka Commands](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#kafka-base)
+- [kafka Scaling](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#Kafka-Scaling)
+- [kafka Dead Letter Queue](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#Kafka-Retry-DLQ)
+```bash
+kubectl run my-kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r0 --command -- sleep infinity
+
+## Pod 안으로 접속 하기
+kubectl exec --tty -i my-kafka-client -- bash
+
+###------------------------------------------------
+### Producer
+###------------------------------------------------
+### PRODUCER 그룹 정보
+kafka-console-producer.sh \
+--broker-list my-kafka:9092 \
+--topic team
+--describe
+
+### Topic team에 producer 연결 후 메시지 publish 하기
+kafka-console-producer.sh --broker-list http://my-kafka:9092 \
+--topic team
+
+###------------------------------------------------
+### Topic
+###------------------------------------------------
+### TOPIC:
+kafka-topics.sh --zookeeper  my-kafka-zookeeper:2181 --list 
+
+### Topic 생성
+kafka-topics.sh --bootstrap-server http://my-kafka:9092 \
+--topic team \
+--create \
+--partitions 1 \
+--replication-factor 1
+
+### Topic 리스트
+kafka-topics.sh --bootstrap-server http://my-kafka:9092 --list
+
+### Topic Partition 증가
+kafka-topics.sh --zookeeper localhost:2181 --alter --topic kafkatest -partitions 2
+
+###------------------------------------------------
+### Consumer
+###------------------------------------------------
+### CONSUMER:
+kafka-console-consumer.sh \
+--bootstrap-server my-kafka:9092 \
+--topic team \
+--from-beginning
+
+kafka-console-consumer.sh \
+--bootstrap-server my-kafka:9092 \
+--topic team
+
+### Topic team에 consumer 연결 후 메시지 subscribe 하기
+kafka-console-consumer.sh --bootstrap-server http://my-kafka:9092 --topic topic_example --from-beginning
+
+### consumer group 목록
+kafka-consumer-groups.sh --bootstrap-server http://my-kafka:9092 --list
+
+### consumer group offset 확인 / Lagging 확인
+kafka-consumer-groups.sh --bootstrap-server http://my-kafka:9092 --group <group_id> --describe
+
+### consumer group offset 재 설정 하기
+kafka-consumer-groups.sh --bootstrap-server http://my-kafka:9092 --group <group_id> --topic topic_example --reset-offsets --to-earliest --execute
+
+##### 다른 reset 옵션
+ --shift-by <positive_or_negative_integer>
+ --to-current
+ --to-latest
+ --to-offset <offset_integer>
+ --to-datetime <datetime_string>
+ --by-duration <duration_string>
+```
+
+
+### 3. Istio 설치
+#### 3.1 install Istio 
+- download istio
+```bash
+curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.11.3 TARGET_ARCH=x86_64 sh -
+```
+- install istio
+```bash
+cd istio-1.11.3
+export PATH=$PWD/bin:$PATH
+istioctl install --set profile=demo -y --set hub=gcr.io/istio-release
+```
+
+#### 3.2 install addons
+- install addon
+```bash
+kubectl apply -f samples/addons
+```
+- modify ClusterIP to LoadBalancer
+```
+## kail
+kubectl edit svc kiali -n istio-system
+:%s/ClusterIP/LoadBalancer/g
+:wq!
+
+## Jaeger
+kubectl edit svc tracing -n istio-system
+:%s/ClusterIP/LoadBalancer/g
+:wq!
+```
+
+#### 3.3 enable istio-injection
+[Istion Ingress](https://labs.msaez.io/#/courses/cna-full/d7337970-32f3-11ed-92da-1bf9f0340c92/#ops-service-mesh-istio)
+
+- Envoy 를 생성해서 Pod에 자동적으로 주입하기 위한 설정
+```bash
+kubectl label namespace default istio-injection=enabled
+```
+
+### 4. Ingress 설치
+#### 4.1Ingress Controller 설치
+```bash
+helm repo add stable https://charts.helm.sh/stable
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+kubectl create namespace ingress-basic
+```
+```bash
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace=ingress-basic
+```
+- 설치 점검
+```bash
+kubectl get all --namespace=ingress-basic
+```
+- Istio Addition Ingress
+```yaml
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata: 
+  name: "istio-ingress"
+  namespace: "istio-system"
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+spec: 
+  rules: 
+    - host: "kiali.service.com"
+      http: 
+        paths: 
+          - 
+            path: /
+            pathType: Prefix
+            backend: 
+              serviceName: kiali
+              servicePort: 20001
+    - host: "prom.service.com"
+      http: 
+        paths: 
+          - 
+            path: /
+            pathType: Prefix
+            backend: 
+              serviceName: prometheus
+              servicePort: 9090
+    - host: "gra.service.com"
+      http: 
+        paths: 
+          - 
+            path: /
+            pathType: Prefix
+            backend: 
+              serviceName: grafana
+              servicePort: 3000
+
+```
+##### 4.2 /etc/hosts 등록
+- C:\Windows\System32\drivers\etc 에 ip 와 CNAME 등록
+  - IP는 AWS의 LoadBalancer 의 IP 입니다.
+```bash
+kubectl get services -n istio-system
+kubectl get ingress  -n istio-system
+```
+
+# 라. CAPSTONE 평가
+
+## 5번. Circuit Breaker
+[Istio/DestinationRule](https://labs.msaez.io/#/courses/cna-full/773ec1d0-b3ca-11ec-a031-eb021d6c81d0/Istio-CircuitBreaker)
+
+### 5번-1 enable istio injection
+- Envoy 를 생성해서 Pod에 자동적으로 주입하기 위한 설정
+```bash
+kubectl label namespace default istio-injection=enabled
+```
+
+### 5번-2 deploy payment
+- RS 3개를 설정하였음
+```bash
+cd payment/kubernetes
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+- deploy 된 payment 점검
+  - envoy 가 정상적으로 runing 되는지 확인 할 것
+```
+kubectl get all
+```
+
+### 5번-4 install Circuit Breaker
+- payment 서비스의 라우팅 대상 컨테이너 목록에서 1초단위로 체크하여 1번이라도 서버 오류가 발생 시, 3분동안 라우팅에서 제외하며, 모든 컨테이너가 제외될 수 있다.
+- 모든 컨테이너가 제외된 경우, ‘no healthy upstream’ 오류를 리턴한다.
+```bash
+kubectl apply -f - << EOF
+  apiVersion: networking.istio.io/v1alpha3
+  kind: DestinationRule
+  metadata:
+    name: payment
+    namespace: default
+  spec:
+    host: payment
+    trafficPolicy:
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1    
+      # loadBalancer:
+      #   simple: ROUND_ROBIN
+      # outlierDetection:
+      #   consecutive5xxErrors: 1
+      #   interval: 1s
+      #   baseEjectionTime: 3m
+      #   maxEjectionPercent: 100
+EOF
+```
+- CB 설정 확인
+```bash
+kubectl get DestinationRule -o yaml
+```
+
+### 5번-5 load 발생 및 캡쳐
+```bash
+kubectl exec -it pod/[SIEGE POD객체] -n tutorial -c siege-nginx  -- /bin/bash
+
+## In POD
+siege -c1 -t10S -v -y http://payment:8080/payments
+
+siege -c2 -t10S -v -y http://payment:8080/payments
+```
+
+
+
+
+## 6번 - API Gateway
+[참조](https://labs.msaez.io/#/courses/cna-full/773ec1d0-b3ca-11ec-a031-eb021d6c81d0/ops-ingress)
+### 6번-1 Ingress 배포
+```yaml
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata: 
+  name: "shop-ingress"
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+spec: 
+  rules: 
+    - 
+      http: 
+        paths: 
+          - 
+            path: /orders
+            pathType: Prefix
+            backend: 
+              serviceName: order
+              servicePort: 8080
+          - 
+            path: /deliveries
+            pathType: Prefix
+            backend: 
+              serviceName: delivery
+              servicePort: 8080
+          - 
+            path: /store
+            pathType: Prefix
+            backend: 
+              serviceName: stores
+              servicePort: 8080
+          - 
+            path: /deliveries
+            pathType: Prefix
+            backend: 
+              serviceName: delivery
+              servicePort: 8080
+```
+```
+kubectl create -f shop-ingress.yaml
+```
+
+### 6번-2 Ingress Controller 설치
+- 위에서 Ingress Controller 를 설치했다면 이 단계는 스킵합니다.
+```bash
+helm repo add stable https://charts.helm.sh/stable
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+kubectl create namespace ingress-basic
+```
+```bash
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace=ingress-basic
+```
+- 설치 점검
+```bash
+kubectl get all --namespace=ingress-basic
+```
+- 설치 완료 후 Ingress Addr 점검
+```bash
+kubectl get ingress
+```
+### 6번-3 EXTERNAL(Ingress) 로 접속 확인
+```bash
+http {{ INGRESS_ADDRESS }}/payments
+```
+## 7번 위 6번 성공시 자동 성공
+
+
+## 8번 K8s Deployment
+## 
+
+
+## 9번 Zero-downtime Deploy(Readiness probe)은 10번의 liveness와 함께 처리 됩니다.
+[Readiness probe](https://labs.msaez.io/#/courses/cna-full/773ec1d0-b3ca-11ec-a031-eb021d6c81d0/#ops-readiness)
+
+#### 9번-1 Application의 Spring Acuator 설정 추가 및 재 compile 및 패킹
+※ liveness와 readiness 의 점검 path를 기본  Microservice로 할 것 인지 아니면, actuator/health 로 할지는 테스트 하면서 결정하도록 한다.
+- spring actuator를 활성화하는 경우는 아래의 설정을 ${PAYMENT_HOME}/resources/application.yaml 에 추가하도록 합니다.
+```bash
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "info"
+          - "health"
+          - "httptrace"
+```
+- 다시 빌드 및 docker image 만들기
+```bash
 export MS_ID=payment
 
 cd /workspace/team4/${MS_ID}
@@ -337,7 +705,7 @@ mvn package -B -DskipTests
 ```
 
 ##### build docker
-```
+```bash
 export MS_ID=payment
 export DOCKER_ID=ulysysdev
 export DOCKER_TAG=v1
@@ -359,182 +727,90 @@ cd /workspace/team4/${MS_ID}
 docker push ${DOCKER_ID}/${MS_ID}:${DOCKER_TAG}
 ```
 
-##### update k8s deployment manifest
+
+## 11번 HPA
+[HPA](https://labs.msaez.io/#/courses/cna-full/773ec1d0-b3ca-11ec-a031-eb021d6c81d0/#ops-autoscale)
+
+#### 11번-1 Auto Scale-out 설정
+- deployment manifest에서 rs 를 1로 수정 후 재배호 합니다.
+```
+kebuectl -f deployment.yaml
+```
+- hpa 를 설정 합니다.
+```bash
+kubectl autoscale deployment payment --cpu-percent=20 --min=1 --max=5
+```
+- hpa 를 확인 합니다.
+```bash
+kubectl get hpa
+```
+
+#### 11번-2 hpa 점검
+- load 를 발생 시킵니다.
+  - 50명, 60초 동안 부하를 발생 시킵니다.
+```bash
+kubectl exec -it siege -- /bin/bash
+siege -c50 -t60S -v http://payment:8080/payments
+exit
+```
+#### 11번-3 payment Pod 가 증가하는 것을 확인
+
+```bash
+kubectl get hpa
+```
+- Seige Summary
+```bash
 
 ```
 
 
-```
+## 12번 PVC/ Secret Map
+[PVC](https://labs.msaez.io/#/courses/cna-full/773ec1d0-b3ca-11ec-a031-eb021d6c81d0/ops-persistence-volume)
+#### 12번-1 EFS 생성
 
-#####  install Ingress Controller
-```
-helm repo add stable https://charts.helm.sh/stable
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-kubectl create namespace ingress-basic
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace=ingress-basic
-```
-
-#####
+#### 12번-2 EFS 계정(SA)에 대한 RBAC 설정
+- SA 배포
 ```yaml
-apiVersion: "extensions/v1beta1"
-kind: "Ingress"
-metadata: 
-  name: "ingress"
-  annotations: 
-    kubernetes.io/ingress.class: "nginx"
-spec: 
-  rules: 
-    - 
-      http: 
-        paths: 
-          - 
-            path: /orders
-            pathType: Prefix
-            backend: 
-              serviceName: order
-              servicePort: 8080
-          - 
-            path: /payments
-            pathType: Prefix
-            backend: 
-              serviceName: payment
-              servicePort: 8080
-          - 
-            path: /stores
-            pathType: Prefix
-            backend: 
-              serviceName: store
-              servicePort: 8080
-          - 
-            path: /deliveries
-            pathType: Prefix
-            backend: 
-              serviceName: delivery
-              servicePort: 8080
-```
-
-
-```bash
-kubectl create -f ingress.yaml
-```
-
-##### check k8s process
-```bash
-gitpod /workspace/team4/gateway/kubernetes (main) $ k get all -A
-NAMESPACE       NAME                                                          READY   STATUS    RESTARTS   AGE
-default         pod/my-kafka-0                                                1/1     Running   1          82m
-default         pod/my-kafka-client                                           1/1     Running   0          78m
-default         pod/my-kafka-zookeeper-0                                      1/1     Running   0          82m
-default         pod/payment-76469bc4c5-slg4j                                  1/1     Running   0          12m
-ingress-basic   pod/nginx-ingress-ingress-nginx-controller-5d88d44856-69srv   1/1     Running   0          2m21s
-kube-system     pod/aws-node-n8pq9                                            1/1     Running   0          3h7m
-kube-system     pod/aws-node-rmdxv                                            1/1     Running   0          3h7m
-kube-system     pod/aws-node-tjmc2                                            1/1     Running   0          3h7m
-kube-system     pod/coredns-79cc4658db-bv55k                                  1/1     Running   0          3h15m
-kube-system     pod/coredns-79cc4658db-s9qqr                                  1/1     Running   0          3h15m
-kube-system     pod/kube-proxy-k2k4l                                          1/1     Running   0          3h7m
-kube-system     pod/kube-proxy-qwgv8                                          1/1     Running   0          3h7m
-kube-system     pod/kube-proxy-w6xvp                                          1/1     Running   0          3h7m
-
-NAMESPACE       NAME                                                       TYPE           CLUSTER-IP       EXTERNAL-IP                                                                    PORT(S)                      AGE
-default         service/kubernetes                                         ClusterIP      10.100.0.1       <none>                                                                         443/TCP                      3h15m
-default         service/my-kafka                                           ClusterIP      10.100.198.113   <none>                                                                         9092/TCP                     82m
-default         service/my-kafka-headless                                  ClusterIP      None             <none>                                                                         9092/TCP,9093/TCP            82m
-default         service/my-kafka-zookeeper                                 ClusterIP      10.100.243.96    <none>                                                                         2181/TCP,2888/TCP,3888/TCP   82m
-default         service/my-kafka-zookeeper-headless                        ClusterIP      None             <none>                                                                         2181/TCP,2888/TCP,3888/TCP   82m
-default         service/payment                                            ClusterIP      10.100.64.194    <none>                                                                         8080/TCP                     12m
-ingress-basic   service/nginx-ingress-ingress-nginx-controller             LoadBalancer   10.100.241.105   a275654bef1e544208389d4833f9dd7d-1462542699.ap-northeast-3.elb.amazonaws.com   80:32276/TCP,443:32586/TCP   2m22s
-ingress-basic   service/nginx-ingress-ingress-nginx-controller-admission   ClusterIP      10.100.192.243   <none>                                                                         443/TCP                      2m22s
-kube-system     service/kube-dns                                           ClusterIP      10.100.0.10      <none>                                                                         53/UDP,53/TCP                3h15m
-
-NAMESPACE     NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-kube-system   daemonset.apps/aws-node     3         3         3       3            3           <none>          3h15m
-kube-system   daemonset.apps/kube-proxy   3         3         3       3            3           <none>          3h15m
-
-NAMESPACE       NAME                                                     READY   UP-TO-DATE   AVAILABLE   AGE
-default         deployment.apps/payment                                  1/1     1            1           12m
-ingress-basic   deployment.apps/nginx-ingress-ingress-nginx-controller   1/1     1            1           2m22s
-kube-system     deployment.apps/coredns                                  2/2     2            2           3h15m
-
-NAMESPACE       NAME                                                                DESIRED   CURRENT   READY   AGE
-default         replicaset.apps/payment-76469bc4c5                                  1         1         1       12m
-ingress-basic   replicaset.apps/nginx-ingress-ingress-nginx-controller-5d88d44856   1         1         1       2m22s
-kube-system     replicaset.apps/coredns-79cc4658db                                  2         2         2       3h15m
-
-NAMESPACE   NAME                                  READY   AGE
-default     statefulset.apps/my-kafka             1/1     82m
-default     statefulset.apps/my-kafka-zookeeper   1/1     82m
-```
-
-##### install HTTPie Pod
-```
-cat <<EOF | kubectl apply -f -
-apiVersion: "v1"
-kind: "Pod"
-metadata: 
-  name: httpie
-  labels: 
-    name: httpie
-spec: 
-  containers: 
-    - 
-      name: httpie
-      image: clue/httpie
-      command:
-        - sleep
-        - "36000"
-EOF
-```
-```
-kubectl exec -it httpie bin/bash
-```
-
-###### install Seige Pod
-```bash
-kubectl apply -f - <<EOF
 apiVersion: v1
-kind: Pod
+kind: ServiceAccount
 metadata:
-  name: siege
-spec:
-  containers:
-  - name: siege
-    image: apexacme/siege-nginx
-EOF
+  name: efs-provisioner
+  namespace: default
 ```
 ```bash
-kubectl exec -it siege bin/bash
+kubectl apply -f efs-sa.yaml
+kubectl get ServiceAccount 
 ```
-
-
-###### install Metric server
-```
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
-kubectl get deployment metrics-server -n kube-system
-```
-
-
-##### install Istio
+- RBAC 배포
 ```bash
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.11.3 TARGET_ARCH=x86_64 sh -
-cd istio-1.11.3
-export PATH=$PWD/bin:$PATH
-
-
-istioctl install --set profile=demo --set hub=gcr.io/istio-release
+kubectl apply -f efs-rbac.yaml
 ```
-
-- install Isto samples/addons
+- efs provisioner 배포
+  - 반드시 env 의 설정 값을 현행화 해야 합니다. (efs-provisioner-deploy.yml 는 샘플 수준 임)
+```
+kubectl apply -f efs-provisioner-deploy.yml
+```
+#### 12번-3 StorageClass 등록
 ```bash
-kubectl apply -f samples/addons
+kubectl apply -f efs-storageclass.yml
+kubectl get sc aws-efs
 ```
-
-- enable istio-system
+#### 12번-4 PVC 생성
+```bash
+kubectl apply -f volume-pvc.yml
+kubectl get pvc aws-efs
 ```
-kubectl apply -f <(istioctl kube-inject -f Deployment.yml) -n istio-test-ns
-kubectl label namespace default istio-injection=enabled
+#### 12번-5 POD 적용
+- volume 에 대한 주석을 deployment.yaml 에서 해제하고 다시 배포
 ```
+kubectl apply -f deployment.yaml
+```
+#### 12번-6 POD 에  mount 확인
+```
+kubectl get pods
 
----
-
+kubectl exec -it pod/payment-oooooo payment -- /bin/sh
+## in POD
+cd /mnt/aws
+touch HELLO-WORLD.txt
+```

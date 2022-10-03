@@ -55,6 +55,24 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "info"
+          - "health"
+          - "httptrace"
+
+feign:
+  hystrix:
+    enabled: true
+    
+hystrix:
+  command:
+    # 전역설정
+    default:
+      execution.isolation.thread.timeoutInMilliseconds: 610
 
 server:
   port: 8084
