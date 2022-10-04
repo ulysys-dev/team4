@@ -56,13 +56,20 @@ logging:
     org.springframework.cloud: debug
 
 management:
+  health:
+    status:
+      order: DOWN, MAINTENANCE, UNKOWN, UP
+      http-mapping:
+        DOWN: 503
+        MAINTENANCE: 503
+        UNKNOWN: 200
+        UP: 200
   endpoints:
     web:
       exposure:
         include:
-          - "info"
-          - "health"
-          - "httptrace"
+          - "*"
+
 
 feign:
   hystrix:
@@ -103,4 +110,17 @@ spring:
           destination: team
           contentType: application/json
 
-
+management:
+  health:
+    status:
+      order: DOWN, MAINTENANCE, UNKOWN, UP
+      http-mapping:
+        DOWN: 503
+        MAINTENANCE: 503
+        UNKNOWN: 200
+        UP: 200
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"

@@ -144,6 +144,8 @@ git merge origin/template
 
 
 ---
+Ops
+---
 
 # 가. Kubernetes Cluster 설치
 ## 1. AWS cli Client 설치
@@ -188,6 +190,7 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 ```bash
 export myClusterUserid=team4
 
+
 eksctl create cluster --name ${myClusterUserid}  \
 --version 1.21 \
 --spot --managed --nodegroup-name standard-workers \
@@ -202,6 +205,7 @@ eksctl get cluster
 ## 5. EKS Cluster에 접근하기 위한 Kubectl Context를 등록 합니다.
 ```bash
 export myClusterUserid=team4
+
 aws eks update-kubeconfig --name ${myclusterUserid}
 ```
 - K8s Cluster 의 Node 상태 확인

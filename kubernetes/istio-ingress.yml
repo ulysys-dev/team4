@@ -1,0 +1,36 @@
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata: 
+  name: "istio-ingress"
+  namespace: "istio-system"
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+spec: 
+  rules: 
+    - host: "kiali.service.com"
+      http: 
+        paths: 
+          - 
+            path: /
+            pathType: Prefix
+            backend: 
+              serviceName: kiali
+              servicePort: 20001
+    - host: "prom.service.com"
+      http: 
+        paths: 
+          - 
+            path: /
+            pathType: Prefix
+            backend: 
+              serviceName: prometheus
+              servicePort: 9090
+    - host: "gra.service.com"
+      http: 
+        paths: 
+          - 
+            path: /
+            pathType: Prefix
+            backend: 
+              serviceName: grafana
+              servicePort: 3000

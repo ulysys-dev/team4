@@ -5,7 +5,7 @@ metadata:
   labels:
     app: payment
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: payment
@@ -13,53 +13,31 @@ spec:
     metadata:
       labels:
         app: payment
+        ver: v3
     spec:
       containers:
         - name: payment
-          image: ulysysdev/payment:v1
+          image: ulysysdev/payment:v5
           ports:
             - containerPort: 8080
-          # env:
-          #   - name: superuser.userId
-          #     value: some_value					
-          #   - name: _DATASOURCE_ADDRESS
-          #     value: mysql
-          #   - name: _DATASOURCE_TABLESPACE
-          #     value: orderdb
-          #   - name: _DATASOURCE_USERNAME
-          #     value: root
-          #   - name: _DATASOURCE_PASSWORD
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: mysql-pass
-          #         key: password
-          # volumeMounts:
-          #   - name: volume
-          #     mountPath: "/mnt/aws"              
-          # volumes:
-          #   - name: volume
-          #     PersistentVolumeClaim:
-          #       ClaimName: aws-efs
           resources:
             requests:
-              cpu: "200m"
+              cpu: "500m"
               memory: "256Mi"
             limits:
-              cpu: "200m"
+              cpu: "500m"
               memory: "512Mi"
           readinessProbe:
             httpGet:
-              # path: '/actuator/health'
-              path: '/payments'
+              path: '/actuator/health'
               port: 8080
             initialDelaySeconds: 10
             timeoutSeconds: 2
-            periodSeconds: 5
+            periodSeconds: 10
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              # path: '/actuator/health'
-              path: '/payments'
+              path: '/actuator/health'              
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2

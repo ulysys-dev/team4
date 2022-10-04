@@ -22,14 +22,20 @@ spec:
               serviceName: delivery
               servicePort: 8080
           - 
-            path: /store
+            path: /stores
             pathType: Prefix
             backend: 
-              serviceName: stores
+              serviceName: store
               servicePort: 8080
           - 
             path: /deliveries
             pathType: Prefix
             backend: 
               serviceName: delivery
+              servicePort: 8080
+          - 
+            path: /payments
+            pathType: Prefix
+            backend: 
+              serviceName: payment
               servicePort: 8080
