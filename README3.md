@@ -731,7 +731,7 @@ spec:
   - 정상 상태 확인
 ![](images/liveness-02.jpg)
   - 수동으로 container를 down 시킵니다.
-![](images/liveness-03.jpg)
+![](images/liveness-04.jpg)
 
 - 위 상태 변화에 따라서 POD 상태는 다음과 같이 변경된 후 재기동 됩니다.
   - RESTARTS 에 1 이 추가 되었습니다.
